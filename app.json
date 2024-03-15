@@ -1,13 +1,40 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "nutricheck",
     "userInterfaceStyle": "automatic",
-    "orientation": "default",
+    "orientation": "portrait",
     "web": {
       "output": "static",
       "bundler": "metro"
     },
     "name": "NutriCheck",
-    "slug": "NutriCheck"
+    "slug": "NutriCheck",
+    "icon": "./src/assets/icon.png",
+    "splash": {
+      "image": "./src/assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#222222"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow NutriCheck to access camera for scanning barcodes."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f205b71b-3e54-4d1d-ab7a-ab0fca9cbd04"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.malloc.nutricheck"
+    },
+    "android": {
+      "package": "com.malloc.nutricheck"
+    }
   }
 }

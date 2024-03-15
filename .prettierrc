@@ -1,0 +1,12 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindConfig": "./tailwind.config.js",
+  "tailwindAttributes": ["className", "contentContainerClassName"],
+  "tailwindFunctions": ["clsx", "cn"]
+}

@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type PageContext = {
   id: string;
@@ -28,12 +28,12 @@ export const useProject = create(
   }>(
     (set) => ({
       project: {
-        title: "My New Draft",
-        initialPage: "1",
-        selectedPage: "2",
+        title: 'My New Draft',
+        initialPage: '1',
+        selectedPage: '2',
         pages: [
-          { id: "1", title: "Page 1" },
-          { id: "2", title: "Page 2" },
+          { id: '1', title: 'Page 1' },
+          { id: '2', title: 'Page 2' },
         ],
       },
       // Actions
@@ -41,12 +41,12 @@ export const useProject = create(
         set((state) => ({
           ...state,
           project: {
-            title: "My New Draft",
-            initialPage: "1",
-            selectedPage: "2",
+            title: 'My New Draft',
+            initialPage: '1',
+            selectedPage: '2',
             pages: [
-              { id: "1", title: "Page 1" },
-              { id: "2", title: "Page 2" },
+              { id: '1', title: 'Page 1' },
+              { id: '2', title: 'Page 2' },
             ],
           },
         })),
@@ -67,7 +67,7 @@ export const useProject = create(
           project: {
             ...project,
             selectedPage:
-              project.selectedPage === id ? "1" : project.selectedPage,
+              project.selectedPage === id ? '1' : project.selectedPage,
             pages: project.pages.filter((page) => page.id !== id),
           },
         })),
@@ -91,7 +91,7 @@ export const useProject = create(
           project: {
             ...project,
             pages: project.pages.map((page) =>
-              page.id === id ? { ...page, title } : page
+              page.id === id ? { ...page, title } : page,
             ),
           },
         })),
@@ -135,10 +135,10 @@ export const useProject = create(
         })),
     }),
     {
-      name: "useProject",
+      name: 'useProject',
       version: 1,
       // Persist the store to AsyncStorage
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
+    },
+  ),
 );
