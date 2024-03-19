@@ -20,6 +20,7 @@ import LoadingView from '@/components/loading-view';
 import RetryView from '@/components/retry-view';
 import { useCart } from '@/data/cart';
 import Stepper from '@/components/stepper';
+import getHealthScore from '@/lib/health-score';
 
 export default function Product() {
   const { productEAN } = useGlobalSearchParams();
@@ -184,14 +185,26 @@ export default function Product() {
           <Text
             className={cn(
               'text-lg font-bold capitalize',
-              +product.data?.product?.healthScore < 80
-                ? +product.data?.product?.healthScore < 40
+              getHealthScore(
+                +product.data?.product?.nutriscore_score,
+                product?.data?.upVotes,
+                product?.data?.downVotes,
+              ) < 80
+                ? getHealthScore(
+                    +product.data?.product?.nutriscore_score,
+                    product?.data?.upVotes,
+                    product?.data?.downVotes,
+                  ) < 40
                   ? 'text-red-500'
                   : 'text-yellow-500'
                 : 'text-green-500',
             )}
           >
-            {product.data?.product?.healthScore}
+            {getHealthScore(
+              +product.data?.product?.nutriscore_score,
+              product?.data?.upVotes,
+              product?.data?.downVotes,
+            )}
           </Text>
         </View>
         <Pressable

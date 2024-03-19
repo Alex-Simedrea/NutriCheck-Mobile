@@ -13,7 +13,9 @@ import * as Menu from 'zeego/dropdown-menu';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'nativewind';
 import YesNoDropdown from '@/components/yes-no-dropdown';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import AutocompleteIngredients from '@/components/autocomplete-ingredients';
+import LargeButton from '@/components/large-button';
+import { router } from 'expo-router';
 
 export default function EditPreferences() {
   const { colorScheme } = useColorScheme();
@@ -22,10 +24,12 @@ export default function EditPreferences() {
   const updatePreferences = useUpdatePreferences();
 
   const [prefs, setPrefs] = useState<Preferences>(null);
+  const [ok, setOk] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    if (preferences.data) {
+    if (preferences.data && !ok) {
+      setOk(true);
       setPrefs(preferences.data);
     }
   }, [preferences.data]);
@@ -45,11 +49,22 @@ export default function EditPreferences() {
     return <RetryView refetch={preferences.refetch} />;
   }
 
+  if (updatePreferences.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error',
+      text2: updatePreferences.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+  }
+
   return (
     <ScrollView
       className={'flex-1 bg-white dark:bg-background-900'}
       contentContainerClassName={'px-4 pb-20'}
     >
+      <LargeButton text='Save' onPress={() => { updatePreferences.mutate(prefs); router.back() }} />
       <Caption text='Nutriments' />
       <View
         className={
@@ -84,7 +99,7 @@ export default function EditPreferences() {
               onSelect={() =>
                 setPrefs({
                   ...prefs,
-                  nutriments: { ...prefs.nutriments, nutriscore: 'a' },
+                  nutriments: { ...prefs?.nutriments, nutriscore: 'a' },
                 })
               }
             >
@@ -95,7 +110,7 @@ export default function EditPreferences() {
               onSelect={() =>
                 setPrefs({
                   ...prefs,
-                  nutriments: { ...prefs.nutriments, nutriscore: 'b' },
+                  nutriments: { ...prefs?.nutriments, nutriscore: 'b' },
                 })
               }
             >
@@ -106,7 +121,7 @@ export default function EditPreferences() {
               onSelect={() =>
                 setPrefs({
                   ...prefs,
-                  nutriments: { ...prefs.nutriments, nutriscore: 'c' },
+                  nutriments: { ...prefs?.nutriments, nutriscore: 'c' },
                 })
               }
             >
@@ -117,7 +132,7 @@ export default function EditPreferences() {
               onSelect={() =>
                 setPrefs({
                   ...prefs,
-                  nutriments: { ...prefs.nutriments, nutriscore: 'd' },
+                  nutriments: { ...prefs?.nutriments, nutriscore: 'd' },
                 })
               }
             >
@@ -128,7 +143,7 @@ export default function EditPreferences() {
               onSelect={() =>
                 setPrefs({
                   ...prefs,
-                  nutriments: { ...prefs.nutriments, nutriscore: 'e' },
+                  nutriments: { ...prefs?.nutriments, nutriscore: 'e' },
                 })
               }
             >
@@ -181,6 +196,148 @@ export default function EditPreferences() {
           keyName='saturated-fat'
         />
       </View>
+
+      <Caption text='Ingredients' />
+      <View
+        className={
+          'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+        }
+      >
+        <Text className={'p-0 text-lg text-black dark:text-white'}>
+          Palm oil
+        </Text>
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='palm-oil' />
+      </View>
+      <View
+        className={
+          'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+        }
+      >
+        <Text className={'p-0 text-lg text-black dark:text-white'}>Diet</Text>
+        <Menu.Root>
+          <Menu.Trigger>
+            <View className={'flex-row gap-1'}>
+              <Text className={'p-0 text-lg text-black/70 dark:text-white/70'}>
+                {prefs?.pescatarian
+                  ? 'Pescatarian'
+                  : prefs?.vegetarian
+                    ? 'Vegetarian'
+                    : prefs?.vegan
+                      ? 'Vegan'
+                      : 'None'}
+              </Text>
+              <Ionicons
+                name='chevron-expand-outline'
+                size={24}
+                color={
+                  colorScheme === 'light'
+                    ? 'rgba(0 0 0 / 0.7)'
+                    : 'rgba(255 255 255 / 0.7)'
+                }
+              />
+            </View>
+          </Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item
+              key='vegetarian'
+              onSelect={() =>
+                setPrefs({
+                  ...prefs,
+                  vegetarian: true,
+                  vegan: false,
+                  pescatarian: false,
+                })
+              }
+            >
+              Vegetarian
+            </Menu.Item>
+            <Menu.Item
+              key='vegan'
+              onSelect={() =>
+                setPrefs({
+                  ...prefs,
+                  vegan: true,
+                  vegetarian: false,
+                  pescatarian: false,
+                })
+              }
+            >
+              Vegan
+            </Menu.Item>
+            <Menu.Item
+              key='pescatarian'
+              onSelect={() =>
+                setPrefs({
+                  ...prefs,
+                  pescatarian: true,
+                  vegan: false,
+                  vegetarian: false,
+                })
+              }
+            >
+              Pescatarian
+            </Menu.Item>
+            <Menu.Item
+              key='none'
+              onSelect={() =>
+                setPrefs({
+                  ...prefs,
+                  vegan: false,
+                  vegetarian: false,
+                  pescatarian: false,
+                })
+              }
+            >
+              None
+            </Menu.Item>
+          </Menu.Content>
+        </Menu.Root>
+      </View>
+      <View
+        className={
+          'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+        }
+      >
+        <Text className={'p-0 text-lg font-bold text-black dark:text-white'}>
+          Restricted ingredients
+        </Text>
+      </View>
+      {prefs?.ingredients &&
+        prefs?.ingredients?.map((ingredient, index) => (
+          <View
+            key={index}
+            className={
+              'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+            }
+          >
+            <Text className={'p-0 text-lg text-black dark:text-white'}>
+              {ingredient?.text}
+            </Text>
+            <Ionicons
+              name='close-circle'
+              size={24}
+              color={
+                colorScheme === 'light'
+                  ? 'rgba(0 0 0 / 0.7)'
+                  : 'rgba(255 255 255 / 0.7)'
+              }
+              onPress={() =>
+                setPrefs({
+                  ...prefs,
+                  ingredients: prefs.ingredients.filter(
+                    (i) => i !== ingredient,
+                  ),
+                })
+              }
+            />
+          </View>
+        ))}
+      <AutocompleteIngredients
+        prefs={prefs}
+        setPrefs={setPrefs}
+        setSelectedItem={setSelectedItem}
+        colorScheme={colorScheme}
+      />
 
       <Caption text='Allergens' />
       <View
@@ -321,114 +478,6 @@ export default function EditPreferences() {
           keyName='sulphur-dioxide-and-sulphites'
         />
       </View>
-      <Caption text='Ingredients' />
-      <View
-        className={
-          'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
-        }
-      >
-        <Text className={'p-0 text-lg text-black dark:text-white'}>
-          Palm oil
-        </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='palm-oil' />
-      </View>
-      <View
-        className={
-          'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
-        }
-      >
-        <Text className={'p-0 text-lg text-black dark:text-white'}>Diet</Text>
-        <Menu.Root>
-          <Menu.Trigger>
-            <View className={'flex-row gap-1'}>
-              <Text className={'p-0 text-lg text-black/70 dark:text-white/70'}>
-                {prefs?.pescatarian
-                  ? 'Pescatarian'
-                  : prefs?.vegetarian
-                    ? 'Vegetarian'
-                    : prefs?.vegan
-                      ? 'Vegan'
-                      : 'None'}
-              </Text>
-              <Ionicons
-                name='chevron-expand-outline'
-                size={24}
-                color={
-                  colorScheme === 'light'
-                    ? 'rgba(0 0 0 / 0.7)'
-                    : 'rgba(255 255 255 / 0.7)'
-                }
-              />
-            </View>
-          </Menu.Trigger>
-          <Menu.Content>
-            <Menu.Item
-              key='vegetarian'
-              onSelect={() =>
-                setPrefs({
-                  ...prefs,
-                  vegetarian: true,
-                  vegan: false,
-                  pescatarian: false,
-                })
-              }
-            >
-              Vegetarian
-            </Menu.Item>
-            <Menu.Item
-              key='vegan'
-              onSelect={() =>
-                setPrefs({
-                  ...prefs,
-                  vegan: true,
-                  vegetarian: false,
-                  pescatarian: false,
-                })
-              }
-            >
-              Vegan
-            </Menu.Item>
-            <Menu.Item
-              key='pescatarian'
-              onSelect={() =>
-                setPrefs({
-                  ...prefs,
-                  pescatarian: true,
-                  vegan: false,
-                  vegetarian: false,
-                })
-              }
-            >
-              Pescatarian
-            </Menu.Item>
-            <Menu.Item
-              key='none'
-              onSelect={() =>
-                setPrefs({
-                  ...prefs,
-                  vegan: false,
-                  vegetarian: false,
-                  pescatarian: false,
-                })
-              }
-            >
-              None
-            </Menu.Item>
-          </Menu.Content>
-        </Menu.Root>
-      </View>
-      <AutocompleteDropdown
-        clearOnFocus={false}
-        closeOnBlur={true}
-        closeOnSubmit={false}
-        initialValue={{ id: '2' }} // or just '2'
-        onSelectItem={setSelectedItem}
-        dataSet={[
-          { id: '1', title: 'Alpha' },
-          { id: '2', title: 'Beta' },
-          { id: '3', title: 'Gamma' },
-        ]}
-      />
     </ScrollView>
   );
 }

@@ -1,0 +1,40 @@
+{
+  "nutriments": {
+    "nutriscore": "a" | "b" | "c" | "d" | "e",
+    "salt": true,
+    "sugars": true,
+    "fat": true,
+    "saturated-fat": true
+  },
+  "alergens": {
+    "en:gluten":  true,
+    "en:milk":  true,
+    "en:eggs":  true,
+    "en:nuts":  true,
+    "en:peanuts":  true,
+    "en:sesame-seeds":  true,
+    "en:soybeans":  true,
+    "en:celery":  true,
+    "en:mustard":  true,
+    "en:lupin":  true,
+    "en:fish":  true,
+    "en:crustaceans":  true,
+    "en:molluscs":  true,
+    "en:sulphur-dioxide-and-sulphites":  true
+  },
+  "ingredients": [
+    {
+      "id": "en:carbonated-water",
+      "text": "apa"
+    },
+    {
+      "id": "en:carbonated-water",
+      "text": "zahar"
+    }
+  ],
+  "vegetarian": true,
+  "vegan": true,
+  "pescatarian": true,
+  "palmoil": true,
+  "calorie-goal": 1000
+}

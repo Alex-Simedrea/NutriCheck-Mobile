@@ -61,6 +61,7 @@ export default function ProductCard({
             }}
           />
         ) : (
+          // <Text>{photoUrl}</Text>
           <View className='h-24 w-24 items-center justify-center rounded-2xl bg-background-100 dark:bg-background-600'>
             <Feather
               name='camera-off'
@@ -80,7 +81,7 @@ export default function ProductCard({
           <View className='flex-row justify-between'>
             {!cartItem && (
               <Text className='text-lg leading-tight text-black dark:text-white'>
-                {price}
+                {`$${price}`}
               </Text>
             )}
             <Text
@@ -106,8 +107,8 @@ export default function ProductCard({
             onDecrement={onDecrement}
           />
           <View className='flex-1 flex-row justify-end'>
-            <Text className='text-lg font-bold text-black dark:text-white'>
-              {price}
+            <Text className='self-center pr-4 text-lg font-bold text-black dark:text-white'>
+              {`$${price}`}
             </Text>
             <LargeButton
               text={null}

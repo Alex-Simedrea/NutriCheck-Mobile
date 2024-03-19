@@ -2,11 +2,18 @@ import { ScrollView, Text } from 'react-native';
 import Caption from '@/components/caption';
 import ProductCard from '@/components/product-card';
 import { router } from 'expo-router';
-import { useCart } from '@/data/cart';
 import ProductsList from '@/components/products-list';
+import RecommendationsList from '@/components/recommendations-list';
+import { useCart } from '@/data/cart';
+import { useGetOFFProducts, useGetProducts } from '@/api/product';
+import LoadingView from '@/components/loading-view';
+import Toast from 'react-native-toast-message';
+import RetryView from '@/components/retry-view';
+import { mergeEachItemInLists } from '@/lib/utils';
+import React from 'react';
+import { useGetPreferences } from '@/api/preferences';
 
 export default function Cart() {
-  const { reset } = useCart();
   const suggestions = [
     {
       id: '1',
@@ -34,46 +41,63 @@ export default function Cart() {
     },
   ];
 
+  const { cart } = useCart();
+  const products = useGetProducts(
+    cart.products.map((item) => item.ean as string),
+  );
+  const offProducts = useGetOFFProducts(
+    cart.products.map((item) => item.ean as string),
+  );
+  const preferences = useGetPreferences();
+
+  if (products.isPending || offProducts.isPending || preferences.isPending) {
+    return <LoadingView />;
+  }
+
+  if (products.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error fetching products',
+      text2: products.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+    return <RetryView refetch={products.refetch} />;
+  }
+
+  if (offProducts.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error fetching off products',
+      text2: offProducts.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+    // return <RetryView refetch={offProducts.refetch} />;
+  }
+
+  if (preferences.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error fetching preferences',
+      text2: preferences.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+    // return <RetryView refetch={preferences.refetch} />;
+  }
+
+  console.log(JSON.stringify(products.data));
+  const mergedProducts = mergeEachItemInLists([{}, {}], products.data);
+  console.log(JSON.stringify(mergedProducts));
+
   return (
     <ScrollView
       className={'px-4 pt-4 dark:bg-black'}
       contentContainerClassName={'pb-4'}
     >
-      {/*<Button title='Reset' onPress={reset} />*/}
-      <Caption text='Items' className='pt-0' />
-      <ProductsList />
-      {/*<Caption text='Total' className='pb-1 pt-6' />*/}
-      {/*<View className='flex-row justify-between'>*/}
-      {/*  <Text className={'text-lg text-black dark:text-white'}>*/}
-      {/*    Aproximate price*/}
-      {/*  </Text>*/}
-      {/*  <Caption*/}
-      {/*    text='200RON'*/}
-      {/*    className='p-0'*/}
-      {/*  />*/}
-      {/*</View>*/}
-      <Caption text='Suggestions' className='pt-6' />
-      {suggestions.length > 0 ? (
-        suggestions.map((item) => (
-          <ProductCard
-            key={item.id}
-            name={item.name}
-            brand={item.brand}
-            weight={item.weight}
-            price={item.price}
-            healthScore={item.healthScore}
-            className='mb-3'
-            suggestionItem={true}
-            onPress={() => {
-              router.push('/product/1');
-            }}
-          />
-        ))
-      ) : (
-        <Text className='text-lg text-black dark:text-white'>
-          No suggestions at the moment
-        </Text>
-      )}
+      <ProductsList products={products.data} offProducts={offProducts.data} />
+      <RecommendationsList products={mergedProducts} preferences={preferences.data} />
     </ScrollView>
   );
 }

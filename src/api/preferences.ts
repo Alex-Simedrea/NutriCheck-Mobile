@@ -1,5 +1,5 @@
 import api from '@/api/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface Nutriments {
   nutriscore: 'a' | 'b' | 'c' | 'd' | 'e';
@@ -48,16 +48,27 @@ export const fetchPreferences = async () => {
 };
 
 export const updatePreferences = async (preferences: Preferences) => {
-  const res = await api.patch('/profile', preferences);
+  console.log(preferences);
+  const res = await api.patch('/profile', { data: preferences });
+  // console.log(JSON.stringify(res))
   return res.data;
 };
 
 export const useGetPreferences = () => {
-  return useQuery({ queryKey: ['preferences'], queryFn: fetchPreferences });
+  return useQuery({
+    queryKey: ['preferences'],
+    queryFn: fetchPreferences,
+    staleTime: 0,
+  });
 };
 
 export const useUpdatePreferences = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (preferences: Preferences) => updatePreferences(preferences),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['preferences'] });
+    },
   });
 };

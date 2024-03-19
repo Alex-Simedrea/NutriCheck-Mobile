@@ -83,7 +83,7 @@ export const fetchPost = async (id: string) => {
     return {
       ...res.data,
       content: res.data.body,
-      // comments,
+      comments,
     } as Post;
   });
 };

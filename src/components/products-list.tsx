@@ -1,63 +1,36 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useGetOFFProducts, useGetProducts } from '@/api/product';
+import { Product, ProductProps } from '@/api/product';
 import { useCart } from '@/data/cart';
-import LoadingView from '@/components/loading-view';
-import Toast from 'react-native-toast-message';
-import RetryView from '@/components/retry-view';
-import { mergeEachItemInLists } from '@/lib/utils';
 import ProductCard from '@/components/product-card';
 import { router } from 'expo-router';
+import getHealthScore from '@/lib/health-score';
+import { mergeEachItemInLists } from '@/lib/utils';
+import Caption from '@/components/caption';
 
-export default function ProductsList() {
+export default function ProductsList({
+  products,
+  offProducts,
+}: {
+  products: Product[];
+  offProducts: any[];
+}) {
   const { cart, removeProduct, incrementProduct, decrementProduct } = useCart();
-  const products = useGetProducts(
-    cart.products.map((item) => item.ean as string),
-  );
-  const offProducts = useGetOFFProducts(
-    cart.products.map((item) => item.ean as string),
-  );
-
-  if (products.isPending || offProducts.isPending) {
-    return <LoadingView />;
-  }
-
-  if (products.isError) {
-    Toast.show({
-      type: 'customToast',
-      text1: 'Error fetching products',
-      text2: products.error.message,
-      position: 'bottom',
-      visibilityTime: 8000,
-    });
-    return <RetryView refetch={products.refetch} />;
-  }
-
-  if (offProducts.isError) {
-    Toast.show({
-      type: 'customToast',
-      text1: 'Error fetching products',
-      text2: offProducts.error.message,
-      position: 'bottom',
-      visibilityTime: 8000,
-    });
-    return <RetryView refetch={offProducts.refetch} />;
-  }
-
-  const mergedProducts = mergeEachItemInLists(offProducts.data, products.data);
+  const mergedProducts = mergeEachItemInLists([{}, {}], products);
 
   return (
     <View>
+      <Caption text='Items' className='pt-0' />
       {mergedProducts.length > 0 ? (
-        mergedProducts.map((item) => (
+        mergedProducts.map((item, index) => (
           <ProductCard
-            key={item._id}
+            key={index}
             name={item.product_name}
             weight={item.quantity}
             brand={item.brands}
             photoUrl={item.image_url}
             price={item.price}
-            healthScore={50}
+            healthScore={getHealthScore(item.nutriscore_score, products[index].upVotes, products[index].downVotes)}
             onPress={() => {
               router.push(`/product/${item._id}`);
             }}

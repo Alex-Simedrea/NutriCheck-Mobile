@@ -52,6 +52,8 @@ export default function Allergens() {
   }
 
   const productData = merge(offProduct.data.product, product.data.product);
+
+  console.log(Object.values(productData.allergens_tags))
   return (
     <FlatList
       className={'flex-1 dark:bg-background-900'}
@@ -71,8 +73,8 @@ export default function Allergens() {
           </Text>
         </View>
       }
-      data={productData.allergens_tags}
-      keyExtractor={(item) => item}
+      data={Object.values(productData.allergens_tags)}
+      keyExtractor={(item) => item as string}
       ListEmptyComponent={() => {
         return (
           <View className='flex-1 items-center justify-center'>
@@ -85,7 +87,7 @@ export default function Allergens() {
       renderItem={({ item }) => (
         <View className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'>
           <Text className='p-0 text-lg text-black dark:text-white'>
-            {format(item)}
+            {format(item as string)}
           </Text>
         </View>
       )}

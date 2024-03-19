@@ -12,6 +12,7 @@ const FormInput = ({
   errorText,
   contentType,
   flex1,
+  helperText,
   defaultValue = '',
   multiline = false,
   numberOfLines = 1,
@@ -28,6 +29,7 @@ const FormInput = ({
   errorText: string;
   contentType: string;
   flex1: boolean;
+  helperText?: string;
   defaultValue?: string;
   multiline?: boolean;
   numberOfLines?: number;
@@ -77,6 +79,9 @@ const FormInput = ({
                 >
                   {error ? errorText : ''}
                 </Text>
+              )}
+              {!!helperText && (
+                <Text className='ml-2 text-xs text-gray-500'>{helperText}</Text>
               )}
             </View>
           );

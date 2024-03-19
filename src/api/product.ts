@@ -2,13 +2,69 @@ import api from '@/api/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
-export interface Props {
-  [key: string]: string;
+export interface ProductProps {
+  _id: string;
+  product_name: string;
+  quantity: string;
+  price: string;
+  brands: string;
+  nutriments: {
+    carbohydrates: number;
+    carbohydrates_100g: number;
+    energy_kcal: number;
+    energy_kcal_100g: number;
+    fat: number;
+    fat_100g: number;
+    nova_group: number;
+    nova_group_100g: number;
+    proteins: number;
+    proteins_100g: number;
+    salt: number;
+    salt_100g: number;
+    saturated_fat: number;
+    saturated_fat_100g: number;
+    sodium: number;
+    sodium_100g: number;
+    sugars: number;
+    sugars_100g: number;
+    folates: number;
+    niacin: number;
+    riboflavin: number;
+    thiamin: number;
+    vitamin_a: number;
+    vitamin_b6: number;
+    vitamin_b12: number;
+    vitamin_c: number;
+    vitamin_d: number;
+    vitamin_e: number;
+    vitamin_k: number;
+    water: number;
+  };
+  nutriscore_data: {
+    energy: number;
+    fiber: number;
+    fruits_vegetables_nuts_colza_walnut_olive_oils: number;
+    is_beverage: number;
+    proteins: number;
+    saturated_fat: number;
+    sodium: number;
+    sugars: number;
+  };
+  nutriscore_grade: string;
+  nutriscore_score: number;
+  vegetarian: boolean;
+  vegan: boolean;
+  pescatarian: boolean;
+  image_url: string;
+  ingredients: {
+    text: string;
+  }[];
+  allergens_tags: string[];
 }
 
 export interface Product {
   ean: string;
-  product?: Props;
+  product?: ProductProps;
   upVotes: number;
   downVotes: number;
   vote: boolean | null;
@@ -19,7 +75,7 @@ export const fetchProduct = async (ean: string) => {
     return {
       ...res.data,
       ean,
-      product: res.data?.body?.product ? res.data.body.product : null,
+      product: res.data?.body?.product ?? null,
     } as Product;
   });
 };
@@ -49,6 +105,11 @@ export const searchOFFProduct = async (query: string) => {
     )
     .then((res) => res.data as any);
 };
+
+export const searchByProps = async (props: any) => {
+  console.log(JSON.stringify(props, null, 2))
+  return api.post(`/product/recommend`, props).then((res) => res.data);
+}
 
 export const useGetProduct = (ean: string) => {
   return useQuery({
@@ -202,5 +263,12 @@ export const useSearchOFFProduct = (query: string) => {
     queryFn: () => searchOFFProduct(query),
     refetchOnMount: 'always',
     staleTime: 0,
+  });
+};
+
+export const useSearchByProps = (props: any) => {
+  return useQuery({
+    queryKey: ['searchByProps'],
+    queryFn: () => searchByProps(props),
   });
 };

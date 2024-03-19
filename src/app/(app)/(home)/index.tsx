@@ -3,11 +3,14 @@ import { router } from 'expo-router';
 import LargeButton from '@/components/large-button';
 import { useGetPosts } from '@/api/posts';
 import Toast from 'react-native-toast-message';
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PostsList from '@/components/posts-list';
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 
 export default function Index() {
   const { data, error, isPending, isError, refetch } = useGetPosts();
+
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const onRefresh = useCallback(async () => {
     await refetch();

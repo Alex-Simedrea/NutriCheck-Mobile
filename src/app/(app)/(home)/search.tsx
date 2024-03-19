@@ -10,33 +10,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function Search() {
   const inputAccessoryViewID = 'keyboard-accessory';
-  const recommendations = [
-    // {
-    //   id: '1',
-    //   name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-    //   brand: 'Ferrero',
-    //   weight: '450g',
-    //   price: '20RON',
-    //   healthScore: 30,
-    // },
-    // {
-    //   id: '2',
-    //   name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-    //   brand: 'Ferrero',
-    //   weight: '450g',
-    //   price: '20RON',
-    //   healthScore: 100,
-    // },
-    // {
-    //   id: '3',
-    //   name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-    //   brand: 'Ferrero',
-    //   weight: '450g',
-    //   price: '20RON',
-    //   healthScore: 50,
-    // },
-  ];
-
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -77,15 +50,7 @@ export default function Search() {
           }}
           iconName='barcode-outline'
         />
-        <Caption text='Recommendations' className='pt-6' />
-        <FlatList
-          contentContainerClassName='gap-3'
-          data={recommendations}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ProductCard onPress={() => router.push('/product/1')} {...item} />
-          )}
-        />
+        <Caption text='History' className='pt-6' />
         {/*<BarCodeScanner*/}
         {/*  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}*/}
         {/*  style={StyleSheet.absoluteFillObject}*/}

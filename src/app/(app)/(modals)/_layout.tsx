@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import Toast, { ToastConfig } from 'react-native-toast-message';
 import { BlurView } from 'expo-blur';
 import HeaderCloseButton from '@/components/header-close-button';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 const toastConfig: ToastConfig = {
   customToast: ({ text1, text2 }: { text1?: string; text2?: string }) => {
@@ -30,7 +31,7 @@ const toastConfig: ToastConfig = {
 export default function ModalsLayout() {
   const { colorScheme } = useColorScheme();
   return (
-    <>
+    <AutocompleteDropdownContextProvider headerOffset={60}>
       <Stack.Screen options={{ headerShown: false, headerTitle: '' }} />
       <Stack>
         <Stack.Screen
@@ -129,8 +130,24 @@ export default function ModalsLayout() {
             headerLeft: () => <HeaderCloseButton />,
           }}
         />
+        <Stack.Screen
+          name={'create-submission'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Create a product submission',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
       </Stack>
       <Toast config={toastConfig} />
-    </>
+    </AutocompleteDropdownContextProvider>
   );
 }
