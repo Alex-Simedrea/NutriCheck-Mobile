@@ -28,8 +28,6 @@ export const getMatchScore = (
     )
       return 0;
 
-    console.log('hello', JSON.stringify(preferences.allergens, null, 2))
-
     if (preferences?.allergens && product?.allergens_tags) {
       const ownAllergens = Object.keys(preferences.allergens).filter(
         (el) => preferences.allergens[el],

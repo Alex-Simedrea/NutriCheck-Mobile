@@ -48,9 +48,7 @@ export const fetchPreferences = async () => {
 };
 
 export const updatePreferences = async (preferences: Preferences) => {
-  console.log(preferences);
   const res = await api.patch('/profile', { data: preferences });
-  // console.log(JSON.stringify(res))
   return res.data;
 };
 

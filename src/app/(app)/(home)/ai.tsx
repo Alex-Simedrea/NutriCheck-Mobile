@@ -45,7 +45,6 @@ export default function AI() {
           onPress={() => {
             generate.mutate(input, {
               onSuccess: (data) => {
-                console.log('ai', data);
                 setResponse(data);
               },
             });

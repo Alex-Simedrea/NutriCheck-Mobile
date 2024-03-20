@@ -18,8 +18,6 @@ export default function BodyProfile() {
     return <RetryView refetch={preferences.refetch} />;
   }
 
-  console.log(JSON.stringify(preferences.data))
-
   return (
     <>
       <ScrollView

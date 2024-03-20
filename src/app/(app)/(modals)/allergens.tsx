@@ -53,7 +53,6 @@ export default function Allergens() {
 
   const productData = merge(offProduct.data.product, product.data.product);
 
-  console.log(Object.values(productData.allergens_tags))
   return (
     <FlatList
       className={'flex-1 dark:bg-background-900'}

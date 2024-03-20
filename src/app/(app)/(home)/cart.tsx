@@ -1,4 +1,4 @@
-import { ScrollView, Text } from 'react-native';
+import { RefreshControl, ScrollView, Text } from 'react-native';
 import Caption from '@/components/caption';
 import ProductCard from '@/components/product-card';
 import { router } from 'expo-router';
@@ -107,6 +107,12 @@ export default function Cart() {
     <ScrollView
       className={'px-4 pt-4 dark:bg-black'}
       contentContainerClassName={'pb-4'}
+      refreshControl={
+        <RefreshControl
+          refreshing={products.isRefetching}
+          onRefresh={products.refetch}
+        />
+      }
     >
       <PostNotification />
       <ProductsList products={products.data} offProducts={offProducts.data} />

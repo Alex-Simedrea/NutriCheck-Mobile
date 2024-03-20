@@ -116,16 +116,6 @@ export default function SubmissionForm({
   });
 
   const onSubmit = (data) => {
-    console.log(
-      JSON.stringify({
-        body: {
-          product: {
-            ...data,
-          },
-        },
-        ean: data.ean,
-      }),
-    );
     updateSubmission.mutate({
       body: {
         product: {

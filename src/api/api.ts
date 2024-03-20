@@ -12,7 +12,6 @@ api.interceptors.request.use(
       if (session !== undefined && session !== null) {
         config.headers.Authorization = `Bearer ${session}`;
       }
-      console.log(JSON.stringify(config.url));
     } catch (err) {
       console.log(err.code);
     }

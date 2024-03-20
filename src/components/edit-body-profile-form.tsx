@@ -74,7 +74,6 @@ export default function EditBodyProfileForm({
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     updatePreferences.mutate(data);
     router.back();
   };

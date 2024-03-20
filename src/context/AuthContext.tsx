@@ -66,7 +66,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
               setSession(res.data.access_token);
             })
             .catch((error) => {
-              console.log(JSON.stringify(error));
               err = error.message;
             });
           return err;
@@ -97,8 +96,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
               setSession(null);
             })
             .catch((error) => {
-              console.log(JSON.stringify(error));
-              console.log(error.response.data.message);
               err = error.response.data.message;
             });
           return err;

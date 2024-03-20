@@ -77,8 +77,6 @@ export const mergeLists = (
 export const mergeEachItemInLists = (A: any[], B: Product[]) => {
   const result: any[] = [];
 
-  console.log(A, B);
-
   for (let i = 0; i < A.length; i++) {
     result.push(merge(A[i]?.product, B[i]?.product));
   }

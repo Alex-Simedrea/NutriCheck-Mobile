@@ -99,6 +99,74 @@ export default function RecommendationsList({
           No recommendations at the moment
         </Text>
       )}
+      <Caption text='Deficits' className='pt-6' />
+      {Object.entries(
+        getDeficits(
+          {
+            weight: bodyProfile?.weight ?? 75,
+            height: bodyProfile?.height ?? 170,
+            age: bodyProfile?.age ?? 25,
+            sex: bodyProfile?.sex ?? 'male',
+            activityLevel: bodyProfile?.activityLevel ?? 1,
+            special: {
+              pregnant: bodyProfile?.special?.pregnant ?? false,
+              trimester: bodyProfile?.special?.trimester ?? 1,
+            },
+          },
+          [
+            // @ts-ignore
+            products.map((product: ProductProps) => product.nutriments ?? {}),
+          ],
+        ).deficits,
+      ).map(([key, value]) => {
+        return (
+          <View>
+            <Text className={'dark:text-white'}>{`${key}: ${value}\n`}</Text>
+          </View>
+        );
+      })}
+      <View>
+        <Text className={'dark:text-white'}>{`BMR: ${
+          getDeficits(
+            {
+              weight: bodyProfile?.weight ?? 75,
+              height: bodyProfile?.height ?? 170,
+              age: bodyProfile?.age ?? 25,
+              sex: bodyProfile?.sex ?? 'male',
+              activityLevel: bodyProfile?.activityLevel ?? 1,
+              special: {
+                pregnant: bodyProfile?.special?.pregnant ?? false,
+                trimester: bodyProfile?.special?.trimester ?? 1,
+              },
+            },
+            [
+              // @ts-ignore
+              products.map((product: ProductProps) => product.nutriments ?? {}),
+            ],
+          ).bmr
+        }\n`}</Text>
+      </View>
+      <View>
+        <Text className={'dark:text-white'}>{`EER: ${
+          getDeficits(
+            {
+              weight: bodyProfile?.weight ?? 75,
+              height: bodyProfile?.height ?? 170,
+              age: bodyProfile?.age ?? 25,
+              sex: bodyProfile?.sex ?? 'male',
+              activityLevel: bodyProfile?.activityLevel ?? 1,
+              special: {
+                pregnant: bodyProfile?.special?.pregnant ?? false,
+                trimester: bodyProfile?.special?.trimester ?? 1,
+              },
+            },
+            [
+              // @ts-ignore
+              products.map((product: ProductProps) => product.nutriments ?? {}),
+            ],
+          ).eer
+        }\n`}</Text>
+      </View>
     </View>
   );
 }

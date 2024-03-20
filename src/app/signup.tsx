@@ -66,7 +66,6 @@ export default function SignUp() {
 
   useEffect(() => {
     if (session) {
-      console.log(session);
       router.replace('/');
     }
   }, [session]);

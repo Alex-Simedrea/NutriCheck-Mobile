@@ -109,7 +109,6 @@ export const searchOFFProduct = async (query: string) => {
 };
 
 export const searchByProps = async (props: any) => {
-  console.log(JSON.stringify(props, null, 2))
   return api.post(`/product/recommend`, props).then((res) => res.data);
 }
 

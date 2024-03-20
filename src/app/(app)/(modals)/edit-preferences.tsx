@@ -59,8 +59,6 @@ export default function EditPreferences() {
     });
   }
 
-  console.log(JSON.stringify(prefs, null, 2))
-
   return (
     <ScrollView
       className={'flex-1 bg-white dark:bg-background-900'}
