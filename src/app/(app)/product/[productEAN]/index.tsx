@@ -21,6 +21,10 @@ import RetryView from '@/components/retry-view';
 import { useCart } from '@/data/cart';
 import Stepper from '@/components/stepper';
 import getHealthScore from '@/lib/health-score';
+import { useGetPreferences } from '@/api/preferences';
+import { getMatchScore } from '@/lib/recommendations/match-score';
+import { getNutriScore } from '@/lib/nutriscore/nutri-score';
+import { FoodType } from '@/lib/nutriscore/types.d';
 
 export default function Product() {
   const { productEAN } = useGlobalSearchParams();
@@ -29,11 +33,11 @@ export default function Product() {
   const reviewProduct = useVoteProduct();
   const deleteReview = useDeleteVote();
   const posts = useGetPostsByEAN(productEAN as string);
+  const preferences = useGetPreferences();
 
   const cart = useCart();
 
   const { colorScheme } = useColorScheme();
-  let match: 'good' | 'bad' | 'ok' | 'unknown' = 'good';
 
   if (posts.isError) {
     Toast.show({
@@ -45,7 +49,7 @@ export default function Product() {
     });
   }
 
-  if (product.isLoading || offProduct.isLoading) {
+  if (product.isPending || offProduct.isPending || preferences.isPending) {
     return <LoadingView />;
   }
 
@@ -71,11 +75,60 @@ export default function Product() {
     return <RetryView refetch={offProduct.refetch} />;
   }
 
+  if (preferences.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error',
+      text2: preferences.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+    return <RetryView refetch={preferences.refetch} />;
+  }
+
   const mergedProduct = merge(
     offProduct?.data?.product,
     product?.data?.product,
   );
-  console.log(JSON.stringify(product.data));
+  // console.log(JSON.stringify(product.data));
+  // console.log(JSON.stringify(mergedProduct.nutriscore_score, null, 2));
+
+  // console.log(JSON.stringify(preferences.data));
+  let match: string | number;
+  if (mergedProduct?.nutriscore_score) {
+    match = getMatchScore(mergedProduct, {
+      ...preferences.data,
+      allergens: preferences.data.allergens ?? [],
+      ingredients: preferences.data.ingredients ?? [],
+    });
+  } else {
+    match = 'N/A';
+  }
+
+  if (typeof match === 'number' && !Number.isNaN(match)) {
+    if (match < 40) {
+      match = 'Bad';
+    } else if (match > 80) {
+      match = 'Good';
+    } else {
+      match = 'Medium';
+    }
+  }
+
+  let nutriScore: 'A' | 'B' | 'C' | 'D' | 'E' | 'N/A';
+
+  if (mergedProduct?.nutriscore_score) {
+    nutriScore = mergedProduct?.nutriscore_grade?.toUpperCase();
+  } else if (mergedProduct?.nutriscore_data) {
+    getNutriScore(
+      mergedProduct?.nutriscore_data,
+      mergedProduct?.nutriscore_data?.is_beverage
+        ? FoodType.beverage
+        : FoodType.solid,
+    )?.toUpperCase();
+  } else {
+    nutriScore = 'N/A';
+  }
 
   return (
     <ScrollView className={'flex-1 px-4 dark:bg-black'}>
@@ -108,7 +161,9 @@ export default function Product() {
             <Caption text={mergedProduct?.product_name} className='py-0' />
             <View className='flex-row justify-between'>
               <Text
-                className={'text-lg font-bold text-black/80 dark:text-white/80'}
+                className={
+                  'shrink text-lg font-bold leading-tight text-black/80 dark:text-white/80'
+                }
               >
                 {mergedProduct?.brands}
               </Text>
@@ -166,11 +221,11 @@ export default function Product() {
           <Text
             className={cn(
               'text-lg font-bold capitalize',
-              match == 'good'
+              match === 'Good'
                 ? 'text-green-500'
-                : match == 'bad'
+                : match === 'Bad'
                   ? 'text-red-500'
-                  : match == 'ok'
+                  : match === 'Medium'
                     ? 'text-yellow-500'
                     : 'text-background-400',
             )}
@@ -186,25 +241,64 @@ export default function Product() {
             className={cn(
               'text-lg font-bold capitalize',
               getHealthScore(
-                +product.data?.product?.nutriscore_score,
+                nutriScore,
                 product?.data?.upVotes,
                 product?.data?.downVotes,
-              ) < 80
-                ? getHealthScore(
-                    +product.data?.product?.nutriscore_score,
-                    product?.data?.upVotes,
-                    product?.data?.downVotes,
-                  ) < 40
-                  ? 'text-red-500'
-                  : 'text-yellow-500'
-                : 'text-green-500',
+              ) === -1
+                ? 'text-background-400'
+                : getHealthScore(
+                      nutriScore,
+                      product?.data?.upVotes,
+                      product?.data?.downVotes,
+                    ) < 80
+                  ? getHealthScore(
+                      nutriScore,
+                      product?.data?.upVotes,
+                      product?.data?.downVotes,
+                    ) < 40
+                    ? 'text-red-500'
+                    : 'text-yellow-500'
+                  : getHealthScore(
+                        nutriScore,
+                        product?.data?.upVotes,
+                        product?.data?.downVotes,
+                      ) >= 80
+                    ? 'text-green-500'
+                    : 'text-background-400',
             )}
           >
-            {getHealthScore(
-              +product.data?.product?.nutriscore_score,
-              product?.data?.upVotes,
-              product?.data?.downVotes,
+            {Number.isNaN(
+              getHealthScore(
+                nutriScore,
+                product?.data?.upVotes,
+                product?.data?.downVotes,
+              ),
+            )
+              ? 'N/A'
+              : getHealthScore(
+                  nutriScore,
+                  product?.data?.upVotes,
+                  product?.data?.downVotes,
+                )}
+          </Text>
+        </View>
+        <View className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pr-4 dark:border-b-white/10'>
+          <Text className='p-0 text-lg text-black dark:text-white'>
+            Nutri-Score
+          </Text>
+          <Text
+            className={cn(
+              'text-lg font-bold capitalize',
+              nutriScore === 'A'
+                ? 'text-green-500'
+                : nutriScore === 'B' || nutriScore === 'C'
+                  ? 'text-yellow-500'
+                  : nutriScore === 'D' || nutriScore === 'E'
+                    ? 'text-red-500'
+                    : 'text-background-400',
             )}
+          >
+            {nutriScore}
           </Text>
         </View>
         <Pressable

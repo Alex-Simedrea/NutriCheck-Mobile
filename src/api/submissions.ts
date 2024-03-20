@@ -3,23 +3,23 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
 export const fetchSubmission = async (id: string) => {
-  return api.get(`/submissions/${id}`).then((res) => res.data);
+  return api.get(`/submission/${id}`).then((res) => res.data);
 };
 
 export const fetchOwnSubmissions = async () => {
-  return api.get('/submissions').then((res) => res.data);
+  return api.get('/submission').then((res) => res.data);
 };
 
 export const createSubmission = async (data: any) => {
-  return api.post('/submissions', data).then((res) => res.data);
+  return api.post('/submission', data).then((res) => res.data);
 };
 
 export const updateSubmission = async (id: string, data: any) => {
-  return api.patch(`/submissions/${id}`, data).then((res) => res.data);
+  return api.patch(`/submission/${id}`, data).then((res) => res.data);
 };
 
 export const deleteSubmission = async (id: string) => {
-  return api.delete(`/submissions/${id}`).then((res) => res.data);
+  return api.delete(`/submission/${id}`).then((res) => res.data);
 };
 
 export const useGetSubmission = (id: string) => {

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Platform, PlatformColor, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useColorScheme } from 'nativewind';
 
 export default function AppLayout() {
@@ -117,6 +117,55 @@ export default function AppLayout() {
             ) : (
               <Ionicons
                 name='search-outline'
+                size={24}
+                color={
+                  colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'
+                }
+              />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name='ai'
+        options={{
+          title: 'AI',
+          headerTitle: 'AI',
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused
+                  ? Platform.OS === 'ios'
+                    ? PlatformColor('systemBlue')
+                    : colorScheme === 'dark'
+                      ? 'rgb(190,190,190)'
+                      : 'rgb(30,30,30)'
+                  : colorScheme === 'dark'
+                    ? 'rgb(190,190,190)'
+                    : 'rgb(30,30,30)',
+                fontSize: 10,
+              }}
+            >
+              AI
+            </Text>
+          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Ionicons
+                name='color-wand'
+                size={24}
+                color={
+                  Platform.OS === 'ios'
+                    ? Platform.select({
+                      ios: PlatformColor('systemBlue'),
+                    })
+                    : colorScheme === 'dark'
+                      ? 'rgb(190,190,190)'
+                      : 'rgb(30,30,30)'
+                }
+              />
+            ) : (
+              <Ionicons
+                name='color-wand-outline'
                 size={24}
                 color={
                   colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'

@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import React, { useCallback, useState } from 'react';
 import PostsList from '@/components/posts-list';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import PostNotification from '@/components/post-notification';
 
 export default function Index() {
   const { data, error, isPending, isError, refetch } = useGetPosts();
@@ -34,6 +35,7 @@ export default function Index() {
           <RefreshControl refreshing={isPending} onRefresh={onRefresh} />
         }
       >
+      <PostNotification />
         <LargeButton
           text='Create post'
           onPress={() => {

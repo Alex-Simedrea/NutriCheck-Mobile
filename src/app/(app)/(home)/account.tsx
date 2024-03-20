@@ -1,5 +1,4 @@
 import {
-  Button,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -18,6 +17,7 @@ import { useGetOwnPosts } from '@/api/posts';
 import Caption from '@/components/caption';
 import PostsList from '@/components/posts-list';
 import RetryView from '@/components/retry-view';
+import PostNotification from '@/components/post-notification';
 
 export default function Account() {
   const { signOut } = useSession();
@@ -38,14 +38,11 @@ export default function Account() {
       visibilityTime: 8000,
     });
     return (
-      <>
-        <Button title='logout' onPress={() => signOut()} />
-        <RetryView
-          refetch={async () => {
-            await Promise.all([posts.refetch(), account.refetch()]);
-          }}
-        />
-      </>
+      <RetryView
+        refetch={async () => {
+          await Promise.all([posts.refetch(), account.refetch()]);
+        }}
+      />
     );
   }
 
@@ -75,6 +72,7 @@ export default function Account() {
           />
         }
       >
+        <PostNotification />
         <View className='items-center'>
           <Ionicons
             name='person-circle'
@@ -136,6 +134,25 @@ export default function Account() {
             </Pressable>
             <Pressable
               onPress={() => {
+                router.push('/body-profile');
+              }}
+              className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
+            >
+              <Text className='p-0 text-lg text-black dark:text-white'>
+                Edit body profile
+              </Text>
+              <Ionicons
+                name='chevron-forward'
+                size={20}
+                color={
+                  colorScheme === 'light'
+                    ? 'rgba(0, 0, 0, 0.4)'
+                    : 'rgba(255, 255, 255, 0.4)'
+                }
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => {
                 router.push('/create-submission');
               }}
               className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
@@ -153,8 +170,15 @@ export default function Account() {
                 }
               />
             </Pressable>
-            <Pressable className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'>
-              <Text className='p-0 text-lg text-red-500'>Change password</Text>
+            <Pressable
+              onPress={() => {
+                router.push('/submissions');
+              }}
+              className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
+            >
+              <Text className='p-0 text-lg text-black dark:text-white'>
+                Your submissions
+              </Text>
               <Ionicons
                 name='chevron-forward'
                 size={20}
@@ -165,6 +189,37 @@ export default function Account() {
                 }
               />
             </Pressable>
+            <Pressable
+              onPress={() => {
+                router.push('/community-guidelines');
+              }}
+              className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
+            >
+              <Text className='p-0 text-lg text-black dark:text-white'>
+                Community guidelines
+              </Text>
+              <Ionicons
+                name='chevron-forward'
+                size={20}
+                color={
+                  colorScheme === 'light'
+                    ? 'rgba(0, 0, 0, 0.4)'
+                    : 'rgba(255, 255, 255, 0.4)'
+                }
+              />
+            </Pressable>
+            {/*<Pressable className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'>*/}
+            {/*  <Text className='p-0 text-lg text-red-500'>Change password</Text>*/}
+            {/*  <Ionicons*/}
+            {/*    name='chevron-forward'*/}
+            {/*    size={20}*/}
+            {/*    color={*/}
+            {/*      colorScheme === 'light'*/}
+            {/*        ? 'rgba(0, 0, 0, 0.4)'*/}
+            {/*        : 'rgba(255, 255, 255, 0.4)'*/}
+            {/*    }*/}
+            {/*  />*/}
+            {/*</Pressable>*/}
             <Pressable
               onPress={() => {
                 signOut();

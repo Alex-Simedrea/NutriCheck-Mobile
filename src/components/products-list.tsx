@@ -16,7 +16,7 @@ export default function ProductsList({
   offProducts: any[];
 }) {
   const { cart, removeProduct, incrementProduct, decrementProduct } = useCart();
-  const mergedProducts = mergeEachItemInLists([{}, {}], products);
+  const mergedProducts = mergeEachItemInLists(offProducts, products);
 
   return (
     <View>

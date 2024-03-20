@@ -53,10 +53,10 @@ export default function ProductChip({ ean }: { ean: string }) {
       {/*<Text>{ean}</Text>*/}
       {/*<Text>{JSON.stringify(product)}</Text>*/}
       {/*<Text>{JSON.stringify(offProduct)}</Text>*/}
-      {product.data?.props?.photoUrl ? (
+      {product.data?.product?.image_url ? (
         <Image
           source={{
-            uri: product.data?.props?.photoUrl,
+            uri: product.data?.product?.image_url,
           }}
           contentFit='contain'
           style={{ width: 35, height: 35 }}
@@ -83,8 +83,8 @@ export default function ProductChip({ ean }: { ean: string }) {
         className={'line-clamp-1 px-2 text-xl dark:text-white'}
         style={{ flexShrink: 1 }}
       >
-        {ean && product.data?.props?.name
-          ? product.data?.props?.name
+        {ean && product.data?.product?.product_name
+          ? product.data?.product?.product_name
           : offProduct.data?.product?.product_name}
       </Text>
     </Pressable>

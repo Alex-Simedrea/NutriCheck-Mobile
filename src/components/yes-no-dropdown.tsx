@@ -9,10 +9,12 @@ export default function YesNoDropdown({
   prefs,
   setPrefs,
   keyName,
+  objName,
 }: {
   prefs: Preferences;
   setPrefs: (prefs: Preferences) => void;
   keyName: string;
+  objName: string;
 }) {
   const { colorScheme } = useColorScheme();
   return (
@@ -20,7 +22,7 @@ export default function YesNoDropdown({
       <Menu.Trigger>
         <View className={'flex-row gap-1'}>
           <Text className={'p-0 text-lg text-black/70 dark:text-white/70'}>
-            {prefs?.nutriments?.[keyName] ? 'Yes' : 'No'}
+            {prefs?.[objName]?.[keyName] ? 'Yes' : 'No'}
           </Text>
           <Ionicons
             name='chevron-expand-outline'
@@ -39,7 +41,7 @@ export default function YesNoDropdown({
           onSelect={() =>
             setPrefs({
               ...prefs,
-              nutriments: { ...prefs?.nutriments, [keyName]: true },
+              [objName]: { ...prefs?.[objName], [keyName]: true },
             })
           }
         >
@@ -50,7 +52,7 @@ export default function YesNoDropdown({
           onSelect={() =>
             setPrefs({
               ...prefs,
-              nutriments: { ...prefs?.nutriments, [keyName]: false },
+              [objName]: { ...prefs?.[objName], [keyName]: false },
             })
           }
         >

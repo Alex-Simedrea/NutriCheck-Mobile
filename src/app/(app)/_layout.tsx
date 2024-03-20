@@ -11,6 +11,7 @@ function headerHomeName(storePath: string) {
   if (storePath === '/search') return 'Search';
   if (storePath === '/cart') return 'Shopping list';
   if (storePath === '/account') return 'Account';
+  if (storePath === '/ai') return 'AI';
   return 'Home';
 }
 
@@ -26,7 +27,8 @@ export default function AppLayout() {
       pathname === '/' ||
       pathname === '/search' ||
       pathname === '/cart' ||
-      pathname === '/account'
+      pathname === '/account' ||
+      pathname === '/ai'
     )
       path.setPath(pathname);
   }, [pathname]);

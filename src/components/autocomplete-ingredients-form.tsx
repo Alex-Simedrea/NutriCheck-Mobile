@@ -24,10 +24,24 @@ const AutocompleteIngredientsForm = ({
           direction='up'
           onSelectItem={(item) => {
             if (item) {
-              onChange([...(value || []), {
-                id: item.id,
-                text: item.title
-              }]);
+              onChange([
+                ...(value || []),
+                {
+                  id: item.id,
+                  text: item.title,
+                },
+              ]);
+            }
+          }}
+          onSubmit={(item) => {
+            if (item) {
+              onChange([
+                ...(value || []),
+                {
+                  id: item.nativeEvent.text,
+                  text: item.nativeEvent.text,
+                },
+              ]);
             }
           }}
           inputContainerStyle={{

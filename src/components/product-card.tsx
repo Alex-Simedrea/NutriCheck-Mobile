@@ -79,11 +79,6 @@ export default function ProductCard({
             {brand} - {weight}
           </Text>
           <View className='flex-row justify-between'>
-            {!cartItem && (
-              <Text className='text-lg leading-tight text-black dark:text-white'>
-                {`$${price}`}
-              </Text>
-            )}
             <Text
               className={cn(
                 'text-lg leading-tight text-black',
@@ -91,11 +86,18 @@ export default function ProductCard({
                   ? healthScore < 40
                     ? 'text-red-500'
                     : 'text-yellow-500'
-                  : 'text-green-500',
+                  : healthScore >= 80
+                  ? 'text-green-500'
+                  : 'text-background-400',
               )}
             >
               Health score: {healthScore}
             </Text>
+            {!cartItem && price && (
+              <Text className='text-lg leading-tight text-black dark:text-white'>
+                {`$${price}`}
+              </Text>
+            )}
           </View>
         </View>
       </View>

@@ -17,49 +17,39 @@ import { useCart } from '@/data/cart';
 export default function RecommendationsList({
   products,
   preferences,
+  bodyProfile,
 }: {
   products: ProductProps[];
   preferences: Preferences;
+  bodyProfile: any;
 }) {
-  const weight = 70;
-  const height = 170;
-  const age = 30;
-  const sex = 'male';
-  const activityLevel = 1;
-
   const reqBody = generateRecommendationsBody(
     getDeficits(
       {
-        weight,
-        height,
-        age,
-        sex,
-        activityLevel,
-        // special: {
-        //   pregnant: true,
-        //   trimester: 3,
-        // },
+        weight: bodyProfile?.weight ?? 75,
+        height: bodyProfile?.height ?? 170,
+        age: bodyProfile?.age ?? 25,
+        sex: bodyProfile?.sex ?? 'male',
+        activityLevel: bodyProfile?.activityLevel ?? 1,
+        special: {
+          pregnant: bodyProfile?.special?.pregnant ?? false,
+          trimester: bodyProfile?.special?.trimester ?? 1,
+        },
       },
       [
         // @ts-ignore
-        // products.map((product: ProductProps) => product.nutriments ?? {}),
+        products.map((product: ProductProps) => product.nutriments ?? {}),
       ],
     ).deficits,
     {
       // @ts-ignore
-      allergens: {},
+      allergens: preferences.allergens ?? {},
       // @ts-ignore
-      nutriments: {},
-      ingredients: [],
+      nutriments: preferences.nutriments ?? {},
+      ingredients: preferences.ingredients ?? [],
     },
   );
-  // console.log(JSON.stringify(reqBody));
-  // ...preferences,
-  // @ts-ignore
-  // allergens: preferences.allergens ?? {},
-  // @ts-ignore
-  // nutriments: preferences.nutriments ?? {},
-  // ingredients: preferences.ingredients ?? [],
+
   const recommendedProducts = useSearchByProps({
     ...reqBody,
     optional: reqBody.optional ?? {},

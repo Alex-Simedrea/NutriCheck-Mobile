@@ -1,24 +1,28 @@
 import { ScrollView, Text, View } from 'react-native';
 import * as yup from 'yup';
 import Caption from '@/components/caption';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormInput from '@/components/form-input';
-import LargeButton from '@/components/large-button';
-import AutocompleteIngredients from '@/components/autocomplete-ingredients';
-import React, { useState } from 'react';
+import React from 'react';
 import { useColorScheme } from 'nativewind';
-import AutocompleteIngredietnsForm from '@/components/autocomplete-ingredietns-form';
 import { Ionicons } from '@expo/vector-icons';
+import AutocompleteIngredientsForm from '@/components/autocomplete-ingredients-form';
+import LargeButton from '@/components/large-button';
+import YesNoAllergensDropdownForm from '@/components/yes-no-allergens-dropdown-form';
+import { useCreateSubmission } from '@/api/submissions';
+import YesNoGeneralDropdownForm from '@/components/yes-no-general-dropdown-form';
+import { router } from 'expo-router';
+import KeyboardAccessory from '@/components/keyboard-accessory';
 
 export default function CreateSubmission() {
-  const {colorScheme} = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const inputAccessoryViewID = 'keyboard-accessory';
 
-  const [selectedItem, setSelectedItem] = useState(null);
+  const createSubmission = useCreateSubmission();
 
   const schema = yup.object({
-    ean: yup.string().required(),
+    ean: yup.string().length(13).required(),
     product_name: yup.string().required(),
     quantity: yup.string().required(),
     price: yup.number().required(),
@@ -31,8 +35,8 @@ export default function CreateSubmission() {
         'energy-kcal_100g': yup.number().required(),
         fat: yup.number().required(),
         fat_100g: yup.number().required(),
-        'nova-group': yup.number().required(),
-        'nova-group_100g': yup.number().required(),
+        'nova-group': yup.number(),
+        'nova-group_100g': yup.number(),
         proteins: yup.number().required(),
         proteins_100g: yup.number().required(),
         salt: yup.number().required(),
@@ -43,18 +47,18 @@ export default function CreateSubmission() {
         sodium_100g: yup.number().required(),
         sugars: yup.number().required(),
         sugars_100g: yup.number().required(),
-        folates: yup.number().required(),
-        niacin: yup.number().required(),
-        riboflavin: yup.number().required(),
-        thiamin: yup.number().required(),
-        'vitamin-a': yup.number().required(),
-        'vitamin-b6': yup.number().required(),
-        'vitamin-b12': yup.number().required(),
-        'vitamin-c': yup.number().required(),
-        'vitamin-d': yup.number().required(),
-        'vitamin-e': yup.number().required(),
-        'vitamin-k': yup.number().required(),
-        water: yup.number().required(),
+        folates: yup.number(),
+        niacin: yup.number(),
+        riboflavin: yup.number(),
+        thiamin: yup.number(),
+        'vitamin-a': yup.number(),
+        'vitamin-b6': yup.number(),
+        'vitamin-b12': yup.number(),
+        'vitamin-c': yup.number(),
+        'vitamin-d': yup.number(),
+        'vitamin-e': yup.number(),
+        'vitamin-k': yup.number(),
+        water: yup.number(),
       })
       .required(),
     nutriscore_data: yup
@@ -62,15 +66,18 @@ export default function CreateSubmission() {
         energy: yup.number().required(),
         fiber: yup.number().required(),
         fruits_vegetables_nuts_colza_walnut_olive_oils: yup.number().required(),
-        is_beverage: yup.number().required(),
+        is_beverage: yup.boolean().required(),
         proteins: yup.number().required(),
         'saturated-fat': yup.number().required(),
         sodium: yup.number().required(),
         sugars: yup.number().required(),
       })
       .required(),
-    nutriscore_grade: yup.string(),
-    nutriscore_score: yup.number(),
+    nutriscore_grade: yup
+      .string()
+      .matches(/^[a-eA-E]$/)
+      .required(),
+    nutriscore_score: yup.number().nullable(),
     vegetarian: yup.boolean(),
     vegan: yup.boolean(),
     pescatarian: yup.boolean(),
@@ -91,7 +98,7 @@ export default function CreateSubmission() {
     control,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
   } = useForm({
     defaultValues: {
       ingredients: [],
@@ -100,6 +107,26 @@ export default function CreateSubmission() {
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
+
+  const onSubmit = (data) => {
+    console.log(JSON.stringify({
+      body: {
+        product: {
+          ...data
+        }
+      },
+      ean: data.ean
+    }));
+    createSubmission.mutate({
+      body: {
+        product: {
+          ...data
+        }
+      },
+      ean: data.ean
+    });
+    router.back();
+  };
 
   return (
     <>
@@ -578,18 +605,6 @@ export default function CreateSubmission() {
           />
           <FormInput
             control={control}
-            name={'nutriscore_data.is_beverage'}
-            placeholder={'Is Beverage'}
-            secureTextEntry={false}
-            inputAccessoryViewID={inputAccessoryViewID}
-            errorText={errors.nutriscore_data?.is_beverage?.message}
-            contentType={'none'}
-            flex1={false}
-            inModal={true}
-            displayName='Is Beverage'
-          />
-          <FormInput
-            control={control}
             name={'nutriscore_data.proteins'}
             placeholder={'Proteins'}
             secureTextEntry={false}
@@ -636,6 +651,16 @@ export default function CreateSubmission() {
             inModal={true}
             displayName='Sugars'
           />
+          <View
+            className={
+              'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+            }
+          >
+            <Text className={'p-0 text-lg text-black dark:text-white'}>
+              Is beverage
+            </Text>
+            <YesNoGeneralDropdownForm control={control} name='nutriscore_data.is_beverage' />
+          </View>
         </View>
         <Caption text='Nutriscore' className='pt-6' />
         <View className={'gap-2'}>
@@ -664,98 +689,246 @@ export default function CreateSubmission() {
             displayName='Nutriscore Score'
           />
         </View>
-        <Caption text='Other data' className='pt-6' />
-        <View className={'gap-2'}>
-          <FormInput
-            control={control}
-            name={'vegetarian'}
-            placeholder={'Vegetarian'}
-            secureTextEntry={false}
-            inputAccessoryViewID={inputAccessoryViewID}
-            errorText={errors.vegetarian?.message}
-            contentType={'none'}
-            flex1={false}
-            inModal={true}
-            displayName='Vegetarian'
-          />
-          <FormInput
-            control={control}
-            name={'vegan'}
-            placeholder={'Vegan'}
-            secureTextEntry={false}
-            inputAccessoryViewID={inputAccessoryViewID}
-            errorText={errors.vegan?.message}
-            contentType={'none'}
-            flex1={false}
-            inModal={true}
-            displayName='Vegan'
-          />
-          <FormInput
-            control={control}
-            name={'pescatarian'}
-            placeholder={'Pescatarian'}
-            secureTextEntry={false}
-            inputAccessoryViewID={inputAccessoryViewID}
-            errorText={errors.pescatarian?.message}
-            contentType={'none'}
-            flex1={false}
-            inModal={true}
-            displayName='Pescatarian'
-          />
-          <FormInput
-            control={control}
-            name={'image_url'}
-            placeholder={'Image URL'}
-            secureTextEntry={false}
-            inputAccessoryViewID={inputAccessoryViewID}
-            errorText={errors.image_url?.message}
-            contentType={'none'}
-            flex1={false}
-            inModal={true}
-            displayName='Image URL'
-          />
+        <Caption text='Dietary data' className='pt-6' />
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Vegan
+          </Text>
+          <YesNoGeneralDropdownForm control={control} name='vegan' />
         </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Vegetarian
+          </Text>
+          <YesNoGeneralDropdownForm control={control} name='vegetarian' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Pescatarian
+          </Text>
+          <YesNoGeneralDropdownForm control={control} name='pescatarian' />
+        </View>
+        <Caption text='Image' className='pt-6' />
+        <FormInput
+          control={control}
+          name={'image_url'}
+          placeholder={'Image URL'}
+          secureTextEntry={false}
+          inputAccessoryViewID={inputAccessoryViewID}
+          errorText={errors.image_url?.message}
+          contentType={'none'}
+          flex1={false}
+          inModal={true}
+          displayName='Image URL'
+        />
         <Caption text='Ingredients' className='pt-6' />
-        <Text>{JSON.stringify(watch('ingredients'))}</Text>
-        {watch('ingredients') &&
-          watch('ingredients')?.map((ingredient, index) => (
-            <View
-              key={index}
-              className={
-                'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
-              }
-            >
-              <Text className={'p-0 text-lg text-black dark:text-white'}>
-                {ingredient?.text}
-              </Text>
-              <Ionicons
-                name='close-circle'
-                size={24}
-                color={
-                  colorScheme === 'light'
-                    ? 'rgba(0 0 0 / 0.7)'
-                    : 'rgba(255 255 255 / 0.7)'
-                }
-                onPress={() =>
-                  // setPrefs({
-                  //   ...prefs,
-                  //   ingredients: prefs.ingredients.filter(
-                  //     (i) => i !== ingredient,
-                  //   ),
-                  // })
-                  {}
-                }
-              />
-            </View>
-          ))}
-        <AutocompleteIngredietnsForm
+        <Controller
+          control={control}
+          name={'ingredients'}
+          render={({ field: { onChange, value } }) => (
+            <>
+              {watch('ingredients') &&
+                watch('ingredients').map((ingredient, index) => (
+                  <View
+                    key={index}
+                    className={
+                      'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+                    }
+                  >
+                    <Text className={'p-0 text-lg text-black dark:text-white'}>
+                      {ingredient?.text}
+                    </Text>
+                    <Ionicons
+                      name='close-circle'
+                      size={24}
+                      color={
+                        colorScheme === 'light'
+                          ? 'rgba(0 0 0 / 0.7)'
+                          : 'rgba(255 255 255 / 0.7)'
+                      }
+                      onPress={() => {
+                        onChange(
+                          value.filter(
+                            (item, itemIndex) => itemIndex !== index,
+                          ),
+                        );
+                      }}
+                    />
+                  </View>
+                ))}
+            </>
+          )}
+        />
+        <AutocompleteIngredientsForm
           name='ingredients'
           control={control}
           colorScheme={'dark'}
         />
         <Caption text='Allergens' className='pt-6' />
-        <LargeButton text='Submit' onPress={() => {}} />
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Mustard
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:mustard' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Gluten
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:gluten' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>Milk</Text>
+          <YesNoAllergensDropdownForm control={control} id='en:milk' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>Eggs</Text>
+          <YesNoAllergensDropdownForm control={control} id='en:eggs' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>Nuts</Text>
+          <YesNoAllergensDropdownForm control={control} id='en:nuts' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Peanuts
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:peanuts' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Sesame seeds
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:sesame-seeds' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Soybeans
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:soybeans' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Celery
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:celery' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Mustard
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:mustard' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Lupin
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:lupin' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>Fish</Text>
+          <YesNoAllergensDropdownForm control={control} id='en:fish' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Crustaceans
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:crustaceans' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Molluscs
+          </Text>
+          <YesNoAllergensDropdownForm control={control} id='en:molluscs' />
+        </View>
+        <View
+          className={
+            'flex-row justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 dark:border-b-white/10'
+          }
+        >
+          <Text className={'p-0 text-lg text-black dark:text-white'}>
+            Sulphur dioxide and sulphites
+          </Text>
+          <YesNoAllergensDropdownForm
+            control={control}
+            id='en:sulphur-dioxide-and-sulphites'
+          />
+        </View>
+        <LargeButton
+          className='mt-10'
+          text='Submit'
+          onPress={handleSubmit(onSubmit)}
+        />
       </ScrollView>
+      <KeyboardAccessory inputAccessoryViewID={inputAccessoryViewID} />
     </>
   );
 }

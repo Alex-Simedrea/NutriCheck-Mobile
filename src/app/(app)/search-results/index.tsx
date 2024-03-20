@@ -6,6 +6,9 @@ import RetryView from '@/components/retry-view';
 import React from 'react';
 import ProductCard from '@/components/product-card';
 import { mergeLists } from '@/lib/utils';
+import getHealthScore from '@/lib/health-score';
+import { getNutriScore } from '@/lib/nutriscore/nutri-score';
+import { FoodType } from '@/lib/nutriscore/types.d';
 
 export default function SearchResults() {
   const { search } = useLocalSearchParams();
@@ -26,15 +29,25 @@ export default function SearchResults() {
         className='dark:bg-black'
         contentContainerClassName='gap-3 px-4 pb-32 pt-3'
         data={mergeLists(offSearchResults.data, searchResults.data)}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
             <ProductCard
               name={item.product_name}
               weight={item.quantity}
               brand={item.brands}
               photoUrl={item.image_url}
-              price={'10RON'}
-              healthScore={50}
+              price={JSON.stringify(searchResults.data[index]?.upVotes)}
+              healthScore={getHealthScore(item?.nutriscore_grade?.toUpperCase() ??
+              item?.nutriscore_score
+                ? item?.nutriscore_grade?.toUpperCase()
+                : item?.nutriscore_data
+                  ? getNutriScore(
+                    item?.nutriscore_data,
+                    item?.nutriscore_data?.is_beverage
+                      ? FoodType.beverage
+                      : FoodType.solid,
+                  )?.toUpperCase()
+                  : 'N/A', searchResults.data[index]?.upVotes, searchResults.data[index]?.downVotes)}
               onPress={() => {
                 router.push(`/product/${item._id}`);
               }}

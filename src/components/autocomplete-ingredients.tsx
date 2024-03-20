@@ -32,6 +32,27 @@ export default function AutocompleteIngredients({
             });
           }
         }}
+        onSubmit={(item) => {
+          if (item) {
+            setPrefs({
+              ...JSON.parse(JSON.stringify(prefs)),
+              ingredients: prefs?.ingredients
+                ? [
+                    ...prefs?.ingredients,
+                    {
+                      id: item?.nativeEvent.text,
+                      text: item?.nativeEvent.text,
+                    },
+                  ]
+                : [
+                    {
+                      id: item?.nativeEvent.text,
+                      text: item?.nativeEvent.text,
+                    },
+                  ],
+            });
+          }
+        }}
         inputContainerStyle={{
           backgroundColor: 'transparent',
         }}
@@ -45,6 +66,6 @@ export default function AutocompleteIngredients({
         dataSet={ingredients}
       />
     ),
-    [colorScheme, prefs, setSelectedItem]
+    [colorScheme, prefs, setSelectedItem],
   );
 }

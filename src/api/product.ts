@@ -55,8 +55,10 @@ export interface ProductProps {
   vegetarian: boolean;
   vegan: boolean;
   pescatarian: boolean;
+  palmoil: boolean;
   image_url: string;
   ingredients: {
+    id: string;
     text: string;
   }[];
   allergens_tags: string[];

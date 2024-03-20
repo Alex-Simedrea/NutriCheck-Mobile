@@ -4,7 +4,7 @@ import EditAccountForm from '@/components/edit-account-form';
 import LoadingView from '@/components/loading-view';
 
 export default function EditAccount() {
-  const { data, isSuccess, isPending, isError, error } = useGetAccount();
+  const { data, isSuccess, isPending, isError } = useGetAccount();
 
   if (isPending) {
     return <LoadingView />;

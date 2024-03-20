@@ -59,12 +59,13 @@ export default function EditPreferences() {
     });
   }
 
+  console.log(JSON.stringify(prefs, null, 2))
+
   return (
     <ScrollView
       className={'flex-1 bg-white dark:bg-background-900'}
       contentContainerClassName={'px-4 pb-20'}
     >
-      <LargeButton text='Save' onPress={() => { updatePreferences.mutate(prefs); router.back() }} />
       <Caption text='Nutriments' />
       <View
         className={
@@ -160,7 +161,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Salt in low quantity
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='salt' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='salt' objName='nutriments' />
       </View>
       <View
         className={
@@ -170,7 +171,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Sugars in low quantity
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='sugars' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='sugars' objName='nutriments' />
       </View>
       <View
         className={
@@ -180,7 +181,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Fat in low quantity
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='fat' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='fat' objName='nutriments' />
       </View>
       <View
         className={
@@ -194,6 +195,7 @@ export default function EditPreferences() {
           prefs={prefs}
           setPrefs={setPrefs}
           keyName='saturated-fat'
+          objName='nutriments'
         />
       </View>
 
@@ -206,7 +208,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Palm oil
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='palm-oil' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='palm-oil' objName='nutriments' />
       </View>
       <View
         className={
@@ -346,7 +348,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Gluten</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='gluten' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:gluten' objName='allergens' />
       </View>
       <View
         className={
@@ -354,7 +356,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Milk</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='milk' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:milk' objName='allergens' />
       </View>
       <View
         className={
@@ -362,7 +364,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Eggs</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='eggs' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:eggs' objName='allergens' />
       </View>
       <View
         className={
@@ -370,7 +372,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Nuts</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='nuts' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:nuts' objName='allergens' />
       </View>
       <View
         className={
@@ -380,7 +382,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Peanuts
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='peanuts' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:peanuts' objName='allergens' />
       </View>
       <View
         className={
@@ -393,7 +395,8 @@ export default function EditPreferences() {
         <YesNoDropdown
           prefs={prefs}
           setPrefs={setPrefs}
-          keyName='sesame-seeds'
+          keyName='en:sesame-seeds'
+          objName='allergens'
         />
       </View>
       <View
@@ -404,7 +407,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Soybeans
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='soybeans' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:soybeans' objName='allergens' />
       </View>
       <View
         className={
@@ -412,7 +415,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Celery</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='celery' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:celery' objName='allergens' />
       </View>
       <View
         className={
@@ -422,7 +425,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Mustard
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='mustard' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:mustard' objName='allergens' />
       </View>
       <View
         className={
@@ -430,7 +433,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Lupin</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='lupin' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:lupin' objName='allergens' />
       </View>
       <View
         className={
@@ -438,7 +441,7 @@ export default function EditPreferences() {
         }
       >
         <Text className={'p-0 text-lg text-black dark:text-white'}>Fish</Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='fish' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:fish' objName='allergens' />
       </View>
       <View
         className={
@@ -451,7 +454,8 @@ export default function EditPreferences() {
         <YesNoDropdown
           prefs={prefs}
           setPrefs={setPrefs}
-          keyName='crustaceans'
+          keyName='en:crustaceans'
+          objName='allergens'
         />
       </View>
       <View
@@ -462,7 +466,7 @@ export default function EditPreferences() {
         <Text className={'p-0 text-lg text-black dark:text-white'}>
           Molluscs
         </Text>
-        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='molluscs' />
+        <YesNoDropdown prefs={prefs} setPrefs={setPrefs} keyName='en:molluscs' objName='allergens' />
       </View>
       <View
         className={
@@ -475,9 +479,11 @@ export default function EditPreferences() {
         <YesNoDropdown
           prefs={prefs}
           setPrefs={setPrefs}
-          keyName='sulphur-dioxide-and-sulphites'
+          keyName='en:sulphur-dioxide-and-sulphites'
+          objName='allergens'
         />
       </View>
+      <LargeButton className='pt-10' text='Save' onPress={() => { updatePreferences.mutate(prefs); router.back() }} />
     </ScrollView>
   );
 }

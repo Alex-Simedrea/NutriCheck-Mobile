@@ -44,7 +44,7 @@ export interface Preferences {
 
 export const fetchPreferences = async () => {
   const res = await api.get('/profile/preferences');
-  return res.data;
+  return res.data.data;
 };
 
 export const updatePreferences = async (preferences: Preferences) => {

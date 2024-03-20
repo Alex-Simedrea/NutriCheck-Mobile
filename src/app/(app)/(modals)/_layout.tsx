@@ -146,6 +146,70 @@ export default function ModalsLayout() {
             headerLeft: () => <HeaderCloseButton />,
           }}
         />
+        <Stack.Screen
+          name={'community-guidelines'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Community Guidelines',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
+        <Stack.Screen
+          name={'body-profile'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Edit body profile',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
+        <Stack.Screen
+          name={'submissions'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Submissions',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
+        <Stack.Screen
+          name={'submission'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Submission',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
       </Stack>
       <Toast config={toastConfig} />
     </AutocompleteDropdownContextProvider>

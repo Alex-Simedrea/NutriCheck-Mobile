@@ -7,6 +7,7 @@ import KeyboardAccessory from '@/components/keyboard-accessory';
 import Caption from '@/components/caption';
 import { router } from 'expo-router';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import PostNotification from '@/components/post-notification';
 
 export default function Search() {
   const inputAccessoryViewID = 'keyboard-accessory';
@@ -38,6 +39,7 @@ export default function Search() {
   return (
     <>
       <View className='flex-1 px-4 pt-4 dark:bg-black'>
+        <PostNotification />
         <Caption text='Search' />
         <SearchBar inputAccessoryViewID={inputAccessoryViewID} />
         <Text className='self-center py-2 text-xl font-bold text-black dark:text-white'>
@@ -50,7 +52,7 @@ export default function Search() {
           }}
           iconName='barcode-outline'
         />
-        <Caption text='History' className='pt-6' />
+        {/*<Caption text='History' className='pt-6' />*/}
         {/*<BarCodeScanner*/}
         {/*  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}*/}
         {/*  style={StyleSheet.absoluteFillObject}*/}

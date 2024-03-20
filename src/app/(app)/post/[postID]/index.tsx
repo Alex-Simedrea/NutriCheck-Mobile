@@ -77,8 +77,6 @@ export default function Post() {
     return <RetryView refetch={refetch} />;
   }
 
-  console.log(JSON.stringify(data));
-
   return (
     <>
       <ScrollView

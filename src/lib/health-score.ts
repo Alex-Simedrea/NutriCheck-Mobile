@@ -1,24 +1,32 @@
-function mapNutriScoreToRange(nutriScore: number) {
-  const minNutriScore = -15;
-  const maxNutriScore = 27;
-  const minRange = 0;
-  const maxRange = 100;
-
-  return (
-    ((nutriScore - minNutriScore) * (maxRange - minRange)) /
-      (maxNutriScore - minNutriScore) +
-    minRange
-  );
+function mapNutriScoreToRange(nutriScore: string) {
+  if (nutriScore === 'A') {
+    return 100;
+  } else if (nutriScore === 'B') {
+    return 75;
+  } else if (nutriScore === 'C') {
+    return 50;
+  } else if (nutriScore === 'D') {
+    return 25;
+  } else if (nutriScore === 'E') {
+    return 0;
+  } else if (nutriScore === 'UNKNOWN') {
+    return -1;
+  }
+  return 0;
 }
 
 export default function getHealthScore(
-  nutriScore: number,
+  nutriScore: string,
   upVotes: number,
   downVotes: number,
 ): number {
   const mappedScore = mapNutriScoreToRange(nutriScore);
 
-  if (upVotes + downVotes === 0) {
+  if (mappedScore === -1) {
+    return -1;
+  }
+
+  if (!upVotes && !downVotes) {
     return Math.round(mappedScore);
   }
 
