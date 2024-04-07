@@ -16,6 +16,7 @@ export default function PostCard({
   onUpVote,
   onDownVote,
   onDeleteVote,
+  inModal = false,
 }: {
   title: string;
   content: string;
@@ -29,11 +30,13 @@ export default function PostCard({
   onUpVote: () => void;
   onDownVote: () => void;
   onDeleteVote: () => void;
+  inModal?: boolean;
 }) {
   return (
     <Pressable
       className={cn(
         'w-full rounded-2xl bg-white px-6 py-4 dark:bg-background-900',
+        inModal ? 'bg-background-50 dark:bg-background-800' : '',
         className,
       )}
       onPress={onPress}

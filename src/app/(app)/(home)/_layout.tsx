@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Platform, PlatformColor, Text } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from 'nativewind';
 
 export default function AppLayout() {
@@ -15,15 +15,6 @@ export default function AppLayout() {
           borderTopColor: 'rgba(255, 255, 255, 0.3)',
           elevation: 0,
         },
-        // headerTitleStyle: {
-        //   color: colorScheme === 'light' ? 'black' : 'white',
-        // },
-        // headerStyle: {
-        //   backgroundColor:
-        //     colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
-        // },
-        //
-        // headerShadowVisible: false,
         headerShown: false,
       }}
     >
@@ -77,55 +68,6 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name='search'
-        options={{
-          title: 'Search',
-          headerTitle: 'Search',
-          tabBarLabel: ({ focused }) => (
-            <Text
-              style={{
-                color: focused
-                  ? Platform.OS === 'ios'
-                    ? PlatformColor('systemBlue')
-                    : colorScheme === 'dark'
-                      ? 'rgb(190,190,190)'
-                      : 'rgb(30,30,30)'
-                  : colorScheme === 'dark'
-                    ? 'rgb(190,190,190)'
-                    : 'rgb(30,30,30)',
-                fontSize: 10,
-              }}
-            >
-              Search
-            </Text>
-          ),
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Ionicons
-                name='search'
-                size={24}
-                color={
-                  Platform.OS === 'ios'
-                    ? Platform.select({
-                        ios: PlatformColor('systemBlue'),
-                      })
-                    : colorScheme === 'dark'
-                      ? 'rgb(190,190,190)'
-                      : 'rgb(30,30,30)'
-                }
-              />
-            ) : (
-              <Ionicons
-                name='search-outline'
-                size={24}
-                color={
-                  colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'
-                }
-              />
-            ),
-        }}
-      />
-      <Tabs.Screen
         name='ai'
         options={{
           title: 'AI',
@@ -151,13 +93,13 @@ export default function AppLayout() {
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons
-                name='color-wand'
+                name='sparkles'
                 size={24}
                 color={
                   Platform.OS === 'ios'
                     ? Platform.select({
-                      ios: PlatformColor('systemBlue'),
-                    })
+                        ios: PlatformColor('systemBlue'),
+                      })
                     : colorScheme === 'dark'
                       ? 'rgb(190,190,190)'
                       : 'rgb(30,30,30)'
@@ -165,7 +107,7 @@ export default function AppLayout() {
               />
             ) : (
               <Ionicons
-                name='color-wand-outline'
+                name='sparkles-outline'
                 size={24}
                 color={
                   colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'
@@ -175,10 +117,10 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name='cart'
+        name='products'
         options={{
-          title: 'Shopping list',
-          headerTitle: 'Shopping list',
+          title: 'Products',
+          headerTitle: 'Products',
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
@@ -194,13 +136,13 @@ export default function AppLayout() {
                 fontSize: 10,
               }}
             >
-              Shopping list
+              Products
             </Text>
           ),
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons
-                name='list'
+                name='basket'
                 size={24}
                 color={
                   Platform.OS === 'ios'
@@ -214,7 +156,7 @@ export default function AppLayout() {
               />
             ) : (
               <Ionicons
-                name='list-outline'
+                name='basket-outline'
                 size={24}
                 color={
                   colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'
@@ -224,10 +166,10 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name='account'
+        name='health'
         options={{
-          title: 'Account',
-          headerTitle: 'Account',
+          title: 'Health',
+          headerTitle: 'Health',
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
@@ -243,13 +185,13 @@ export default function AppLayout() {
                 fontSize: 10,
               }}
             >
-              Account
+              Health
             </Text>
           ),
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons
-                name='person'
+                name='heart'
                 size={24}
                 color={
                   Platform.OS === 'ios'
@@ -263,7 +205,56 @@ export default function AppLayout() {
               />
             ) : (
               <Ionicons
-                name='person-outline'
+                name='heart-outline'
+                size={24}
+                color={
+                  colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'
+                }
+              />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name='challenges'
+        options={{
+          title: 'Challenges',
+          headerTitle: 'Challenges',
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused
+                  ? Platform.OS === 'ios'
+                    ? PlatformColor('systemBlue')
+                    : colorScheme === 'dark'
+                      ? 'rgb(190,190,190)'
+                      : 'rgb(30,30,30)'
+                  : colorScheme === 'dark'
+                    ? 'rgb(190,190,190)'
+                    : 'rgb(30,30,30)',
+                fontSize: 10,
+              }}
+            >
+              Challenges
+            </Text>
+          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Ionicons
+                name='walk'
+                size={24}
+                color={
+                  Platform.OS === 'ios'
+                    ? Platform.select({
+                        ios: PlatformColor('systemBlue'),
+                      })
+                    : colorScheme === 'dark'
+                      ? 'rgb(190,190,190)'
+                      : 'rgb(30,30,30)'
+                }
+              />
+            ) : (
+              <Ionicons
+                name='walk-outline'
                 size={24}
                 color={
                   colorScheme === 'dark' ? 'rgb(190,190,190)' : 'rgb(30,30,30)'

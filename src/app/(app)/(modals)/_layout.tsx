@@ -210,6 +210,38 @@ export default function ModalsLayout() {
             headerLeft: () => <HeaderCloseButton />,
           }}
         />
+        <Stack.Screen
+          name={'account'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Account',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
+        <Stack.Screen
+          name={'edit-goals'}
+          options={{
+            presentation: 'modal',
+            headerTitleStyle: {
+              color: colorScheme === 'light' ? 'black' : 'white',
+            },
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light' ? 'white' : 'rgb(30, 30, 30)',
+            },
+            headerShadowVisible: false,
+            headerTitle: 'Edit your goals',
+            headerLeft: () => <HeaderCloseButton />,
+          }}
+        />
       </Stack>
       <Toast config={toastConfig} />
     </AutocompleteDropdownContextProvider>

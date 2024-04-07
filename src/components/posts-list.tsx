@@ -12,12 +12,14 @@ export default function PostsList({
   isError,
   refetch,
   isPendingLoading = true,
+  inModal = false,
 }: {
   posts: Post[];
   isPending: boolean;
   isError: boolean;
   refetch: () => void;
   isPendingLoading?: boolean;
+  inModal?: boolean;
 }) {
   if (isPending) {
     if (isPendingLoading) return <LoadingView />;
@@ -37,6 +39,9 @@ export default function PostsList({
         posts?.map((post: Post, index) => (
           <PostCard
             onPress={() => {
+              if (inModal) {
+                router.back();
+              }
               router.push(`/post/${post.id}`);
             }}
             key={index}
@@ -54,6 +59,7 @@ export default function PostsList({
               reviewPost.mutate({ id: post.id.toString(), like: false })
             }
             onDeleteVote={() => deleteReview.mutate(post.id.toString())}
+            inModal={inModal}
           />
         ))
       ) : (

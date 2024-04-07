@@ -23,7 +23,8 @@
         {
           "cameraPermission": "Allow NutriCheck to access camera for scanning barcodes."
         }
-      ]
+      ],
+      "react-native-health"
     ],
     "extra": {
       "eas": {

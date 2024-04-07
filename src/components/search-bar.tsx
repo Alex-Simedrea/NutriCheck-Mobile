@@ -15,7 +15,7 @@ export default function SearchBar({
   return (
     <>
       <TextInput
-        className='h-12 w-full rounded-2xl bg-white px-3 text-lg leading-tight text-black dark:bg-background-900 dark:text-white'
+        className='h-12 w-full flex-1 rounded-2xl bg-white px-3 text-lg leading-tight text-black dark:bg-background-900 dark:text-white'
         placeholder='Enter product name...'
         returnKeyType='search'
         clearButtonMode='while-editing'

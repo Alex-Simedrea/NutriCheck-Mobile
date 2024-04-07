@@ -1,7 +1,5 @@
-import { RefreshControl, ScrollView, Text } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import Caption from '@/components/caption';
-import ProductCard from '@/components/product-card';
-import { router } from 'expo-router';
 import ProductsList from '@/components/products-list';
 import RecommendationsList from '@/components/recommendations-list';
 import { useCart } from '@/data/cart';
@@ -9,40 +7,18 @@ import { useGetOFFProducts, useGetProducts } from '@/api/product';
 import LoadingView from '@/components/loading-view';
 import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
-import { mergeEachItemInLists } from '@/lib/utils';
+import { cn, mergeEachItemInLists } from '@/lib/utils';
 import React from 'react';
 import { useGetPreferences } from '@/api/preferences';
 import PostNotification from '@/components/post-notification';
 import { useGetBodyProfile } from '@/api/body-profile';
+import SearchBar from '@/components/search-bar';
+import KeyboardAccessory from '@/components/keyboard-accessory';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function Cart() {
-  const suggestions = [
-    {
-      id: '1',
-      name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-      brand: 'Ferrero',
-      weight: '450g',
-      price: '20RON',
-      healthScore: 30,
-    },
-    {
-      id: '2',
-      name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-      brand: 'Ferrero',
-      weight: '450g',
-      price: '20RON',
-      healthScore: 100,
-    },
-    {
-      id: '3',
-      name: 'Nutella Hazelnut & Chocolate Spread - Nutella',
-      brand: 'Ferrero',
-      weight: '450g',
-      price: '20RON',
-      healthScore: 50,
-    },
-  ];
-
+export default function Products() {
+  const inputAccessoryViewID = 'keyboard-accessory';
   const { cart } = useCart();
   const products = useGetProducts(
     cart.products.map((item) => item.ean as string),
@@ -53,7 +29,12 @@ export default function Cart() {
   const preferences = useGetPreferences();
   const bodyProfile = useGetBodyProfile();
 
-  if (products.isPending || offProducts.isPending || preferences.isPending || bodyProfile.isPending) {
+  if (
+    products.isPending ||
+    offProducts.isPending ||
+    preferences.isPending ||
+    bodyProfile.isPending
+  ) {
     return <LoadingView />;
   }
 
@@ -115,8 +96,27 @@ export default function Cart() {
       }
     >
       <PostNotification />
+      <Caption text='Search' />
+      <View className={'flex-row pb-4'}>
+        <SearchBar inputAccessoryViewID={inputAccessoryViewID} />
+        <Pressable
+          onPress={() => {
+            router.push('/scan-code');
+          }}
+          className={cn('ml-2 active:opacity-70')}
+        >
+          <View className='dark:android:bg-blue-400 h-12 flex-row items-center justify-center rounded-[14] bg-default-blue px-4'>
+            <Ionicons name={'barcode-outline'} size={28} color='white' />
+          </View>
+        </Pressable>
+      </View>
+      <KeyboardAccessory inputAccessoryViewID={inputAccessoryViewID} />
       <ProductsList products={products.data} offProducts={offProducts.data} />
-      <RecommendationsList products={mergedProducts} preferences={preferences.data} bodyProfile={bodyProfile.data} />
+      <RecommendationsList
+        products={mergedProducts}
+        preferences={preferences.data}
+        bodyProfile={bodyProfile.data}
+      />
     </ScrollView>
   );
 }

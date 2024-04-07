@@ -118,9 +118,9 @@ export default function RecommendationsList({
             products.map((product: ProductProps) => product.nutriments ?? {}),
           ],
         ).deficits,
-      ).map(([key, value]) => {
+      ).map(([key, value], index) => {
         return (
-          <View>
+          <View key={index}>
             <Text className={'dark:text-white'}>{`${key}: ${value}\n`}</Text>
           </View>
         );

@@ -16,7 +16,7 @@ export default function LargeButton({
   return (
     <Pressable
       onPress={onPress}
-      className={cn('w-full active:opacity-70', className)}
+      className={cn(' active:opacity-70', className)}
     >
       <View className='dark:android:bg-blue-400 h-14 w-full flex-row items-center justify-center rounded-[16.5] bg-default-blue'>
         {iconName && (

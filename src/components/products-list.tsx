@@ -20,7 +20,7 @@ export default function ProductsList({
 
   return (
     <View>
-      <Caption text='Items' className='pt-0' />
+      <Caption text='Shopping list' className='pt-0' />
       {mergedProducts.length > 0 ? (
         mergedProducts.map((item, index) => (
           <ProductCard

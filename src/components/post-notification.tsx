@@ -10,7 +10,7 @@ export default function PostNotification() {
   const { colorScheme } = useColorScheme();
   const { shown, setShown } = useNotification();
 
-  if (!shown) return null;
+  if (true) return null;
 
   return (
     <View className={'rounded-2xl bg-white px-6 py-6 dark:bg-background-900 my-4'}>

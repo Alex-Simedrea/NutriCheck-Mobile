@@ -110,7 +110,7 @@ export default function ProductCard({
           />
           <View className='flex-1 flex-row justify-end'>
             <Text className='self-center pr-4 text-lg font-bold text-black dark:text-white'>
-              {`$${price}`}
+              {price ? `$${price}` : ''}
             </Text>
             <LargeButton
               text={null}
