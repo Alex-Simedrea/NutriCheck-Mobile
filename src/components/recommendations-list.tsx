@@ -13,6 +13,7 @@ import LoadingView from '@/components/loading-view';
 import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
 import { useCart } from '@/data/cart';
+import { kebabToTitleCase } from '@/lib/utils';
 
 export default function RecommendationsList({
   products,
@@ -23,6 +24,7 @@ export default function RecommendationsList({
   preferences: Preferences;
   bodyProfile: any;
 }) {
+  // console.log(products, preferences, bodyProfile);
   const reqBody = generateRecommendationsBody(
     getDeficits(
       {
@@ -36,10 +38,7 @@ export default function RecommendationsList({
           trimester: bodyProfile?.special?.trimester ?? 1,
         },
       },
-      [
-        // @ts-ignore
-        products.map((product: ProductProps) => product.nutriments ?? {}),
-      ],
+      products.map((product: ProductProps) => product.nutriments ?? {}),
     ).deficits,
     {
       // @ts-ignore
@@ -73,32 +72,32 @@ export default function RecommendationsList({
 
   return (
     <View>
-      <Caption text='Recommendations' className='pt-6' />
-      {recommendedProducts.data.length > 0 ? (
-        recommendedProducts.data.map((item: any, index) => (
-          <ProductCard
-            key={index}
-            name={item?.data?.product?.product_name}
-            brand={item?.data?.product?.brands}
-            weight={item?.data?.product?.quantity}
-            price={item?.data?.product?.price}
-            photoUrl={item?.data?.product?.image_url}
-            healthScore={1}
-            className='mb-3'
-            suggestionItem={true}
-            onPress={() => {
-              router.push(`/product/${item?.ean}`);
-            }}
-            suggestionItemAction={() => {
-              addProduct(item?.ean, 1);
-            }}
-          />
-        ))
-      ) : (
-        <Text className='text-lg text-black dark:text-white'>
-          No recommendations at the moment
-        </Text>
-      )}
+      {/*<Caption text='Recommendations' className='pt-6' />*/}
+      {/*{recommendedProducts.data.length > 0 ? (*/}
+      {/*  recommendedProducts.data.map((item: any, index) => (*/}
+      {/*    <ProductCard*/}
+      {/*      key={index}*/}
+      {/*      name={item?.data?.product?.product_name}*/}
+      {/*      brand={item?.data?.product?.brands}*/}
+      {/*      weight={item?.data?.product?.quantity}*/}
+      {/*      price={item?.data?.product?.price}*/}
+      {/*      photoUrl={item?.data?.product?.image_url}*/}
+      {/*      healthScore={1}*/}
+      {/*      className='mb-3'*/}
+      {/*      suggestionItem={true}*/}
+      {/*      onPress={() => {*/}
+      {/*        router.push(`/product/${item?.ean}`);*/}
+      {/*      }}*/}
+      {/*      suggestionItemAction={() => {*/}
+      {/*        addProduct(item?.ean, 1);*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  ))*/}
+      {/*) : (*/}
+      {/*  <Text className='text-lg text-black dark:text-white'>*/}
+      {/*    No recommendations at the moment*/}
+      {/*  </Text>*/}
+      {/*)}*/}
       <Caption text='Deficits' className='pt-6' />
       {Object.entries(
         getDeficits(
@@ -113,15 +112,12 @@ export default function RecommendationsList({
               trimester: bodyProfile?.special?.trimester ?? 1,
             },
           },
-          [
-            // @ts-ignore
-            products.map((product: ProductProps) => product.nutriments ?? {}),
-          ],
+          products.map((product: ProductProps) => product.nutriments ?? {}),
         ).deficits,
       ).map(([key, value], index) => {
         return (
           <View key={index}>
-            <Text className={'dark:text-white'}>{`${key}: ${value}\n`}</Text>
+            <Text className={'dark:text-white'}>{`${kebabToTitleCase(key)}: ${value}\n`}</Text>
           </View>
         );
       })}
@@ -139,10 +135,7 @@ export default function RecommendationsList({
                 trimester: bodyProfile?.special?.trimester ?? 1,
               },
             },
-            [
-              // @ts-ignore
-              products.map((product: ProductProps) => product.nutriments ?? {}),
-            ],
+            products.map((product: ProductProps) => product.nutriments ?? {}),
           ).bmr
         }\n`}</Text>
       </View>
@@ -160,10 +153,7 @@ export default function RecommendationsList({
                 trimester: bodyProfile?.special?.trimester ?? 1,
               },
             },
-            [
-              // @ts-ignore
-              products.map((product: ProductProps) => product.nutriments ?? {}),
-            ],
+            products.map((product: ProductProps) => product.nutriments ?? {}),
           ).eer
         }\n`}</Text>
       </View>

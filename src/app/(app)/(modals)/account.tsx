@@ -22,21 +22,22 @@ import RetryView from '@/components/retry-view';
 import { useBadges } from '@/data/badges';
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
-import LargeButton from '@/components/large-button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const images = {
-  'challenger1.png': require('@/assets/challenger1.png'),
-  'challenger2.png': require('@/assets/challenger2.png'),
-  'challenger3.png': require('@/assets/challenger3.png'),
-  'master1.png': require('@/assets/master1.png'),
-  'master2.png': require('@/assets/master2.png'),
-  'master3.png': require('@/assets/master3.png'),
-  'champion.png': require('@/assets/champion.png'),
-  'grand-champion.png': require('@/assets/grand-champion.png'),
-  'royal-champion.png': require('@/assets/royal-champion.png'),
-  'ultimate-champion.png': require('@/assets/ultimate-champion.png'),
-  'calories.png': require('@/assets/calories.png'),
-  'steps.png': require('@/assets/steps.png'),
+  'lvl1.png': require('@/assets/badges/lvl1.png'),
+  'lvl2.png': require('@/assets/badges/lvl2.png'),
+  'lvl3.png': require('@/assets/badges/lvl3.png'),
+  'lvl4.png': require('@/assets/badges/lvl4.png'),
+  'lvl5.png': require('@/assets/badges/lvl5.png'),
+  'lvl6.png': require('@/assets/badges/lvl6.png'),
+  'lvl7.png': require('@/assets/badges/lvl7.png'),
+  'lvl8.png': require('@/assets/badges/lvl8.png'),
+  'lvl9.png': require('@/assets/badges/lvl9.png'),
+  'lvl10.png': require('@/assets/badges/lvl10.png'),
+  'calories.png': require('@/assets/badges/calories.png'),
+  'steps.png': require('@/assets/badges/steps.png'),
+  'exercise.png': require('@/assets/badges/exercise.png'),
 };
 
 export default function Account() {
@@ -84,34 +85,34 @@ export default function Account() {
 
   useEffect(() => {
     if (account.data.points >= 0) {
-      badges.addBadge('challenger1.png');
+      badges.addBadge('lvl1.png');
     }
     if (account.data.points >= 10) {
-      badges.addBadge('challenger2.png');
+      badges.addBadge('lvl2.png');
     }
     if (account.data.points >= 100) {
-      badges.addBadge('challenger3.png');
+      badges.addBadge('lvl3.png');
     }
     if (account.data.points >= 500) {
-      badges.addBadge('master1.png');
+      badges.addBadge('lvl4.png');
     }
     if (account.data.points >= 1000) {
-      badges.addBadge('master2.png');
+      badges.addBadge('lvl5.png');
     }
     if (account.data.points >= 5000) {
-      badges.addBadge('master3.png');
+      badges.addBadge('lvl6.png');
     }
     if (account.data.points >= 10000) {
-      badges.addBadge('champion.png');
+      badges.addBadge('lvl7.png');
     }
     if (account.data.points >= 50000) {
-      badges.addBadge('grand-champion.png');
+      badges.addBadge('lvl8.png');
     }
     if (account.data.points >= 100000) {
-      badges.addBadge('royal-champion.png');
+      badges.addBadge('lvl9.png');
     }
     if (account.data.points >= 500000) {
-      badges.addBadge('ultimate-champion.png');
+      badges.addBadge('lvl10.png');
     }
   }, []);
 
@@ -148,14 +149,13 @@ export default function Account() {
             {'@' + account.data.user}
           </Text>
         </View>
-        <Text className='text-2xl font-bold text-black dark:text-white mt-4'>
-          Thank for using premium!
-        </Text>
+        {/*<Text className='mt-4 text-2xl font-bold text-black dark:text-white'>*/}
+        {/*  Thank for using premium!*/}
+        {/*</Text>*/}
         <Caption text='Points and badges' className='mt-8' />
         <View className='w-full gap-2'>
           <View className='flex-row items-center gap-2'>
             <Text className='text-2xl font-bold text-black dark:text-white'>
-              {/* @ts-ignore */}
               {account.data.points}
             </Text>
             <Text className='text-base text-background-600 dark:text-background-400'>
@@ -182,21 +182,21 @@ export default function Account() {
               : null}
           </ScrollView>
         </View>
-        <View className={'gap-4'}>
-          <LargeButton
-            text='Redeem your points'
-            onPress={() => {
-              router.replace('/redeem');
-              // router.back();
-            }}
-          />
-          <LargeButton
-            text='View the leaderboard'
-            onPress={() => {
-              router.replace('/leaderboard');
-            }}
-          />
-        </View>
+        {/*<View className={'gap-4'}>*/}
+        {/*  <LargeButton*/}
+        {/*    text='Redeem your points'*/}
+        {/*    onPress={() => {*/}
+        {/*      router.replace('/redeem');*/}
+        {/*      // router.back();*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*  <LargeButton*/}
+        {/*    text='View the leaderboard'*/}
+        {/*    onPress={() => {*/}
+        {/*      router.replace('/leaderboard');*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*</View>*/}
         <Caption text='Settings' />
         <View className={'gap-2'}>
           <View className='my-4 mt-0 divide-y divide-yellow-300 rounded-2xl bg-background-50 pl-4 dark:bg-background-800'>
@@ -255,44 +255,44 @@ export default function Account() {
                 }
               />
             </Pressable>
-            <Pressable
-              onPress={() => {
-                router.push('/create-submission');
-              }}
-              className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
-            >
-              <Text className='p-0 text-lg text-black dark:text-white'>
-                Submit a new product
-              </Text>
-              <Ionicons
-                name='chevron-forward'
-                size={20}
-                color={
-                  colorScheme === 'light'
-                    ? 'rgba(0, 0, 0, 0.4)'
-                    : 'rgba(255, 255, 255, 0.4)'
-                }
-              />
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                router.push('/submissions');
-              }}
-              className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'
-            >
-              <Text className='p-0 text-lg text-black dark:text-white'>
-                Your submissions
-              </Text>
-              <Ionicons
-                name='chevron-forward'
-                size={20}
-                color={
-                  colorScheme === 'light'
-                    ? 'rgba(0, 0, 0, 0.4)'
-                    : 'rgba(255, 255, 255, 0.4)'
-                }
-              />
-            </Pressable>
+            {/*<Pressable*/}
+            {/*  onPress={() => {*/}
+            {/*    router.push('/create-submission');*/}
+            {/*  }}*/}
+            {/*  className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'*/}
+            {/*>*/}
+            {/*  <Text className='p-0 text-lg text-black dark:text-white'>*/}
+            {/*    Submit a new product*/}
+            {/*  </Text>*/}
+            {/*  <Ionicons*/}
+            {/*    name='chevron-forward'*/}
+            {/*    size={20}*/}
+            {/*    color={*/}
+            {/*      colorScheme === 'light'*/}
+            {/*        ? 'rgba(0, 0, 0, 0.4)'*/}
+            {/*        : 'rgba(255, 255, 255, 0.4)'*/}
+            {/*    }*/}
+            {/*  />*/}
+            {/*</Pressable>*/}
+            {/*<Pressable*/}
+            {/*  onPress={() => {*/}
+            {/*    router.push('/submissions');*/}
+            {/*  }}*/}
+            {/*  className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pb-3 pr-4 active:opacity-70 dark:border-b-white/10'*/}
+            {/*>*/}
+            {/*  <Text className='p-0 text-lg text-black dark:text-white'>*/}
+            {/*    Your submissions*/}
+            {/*  </Text>*/}
+            {/*  <Ionicons*/}
+            {/*    name='chevron-forward'*/}
+            {/*    size={20}*/}
+            {/*    color={*/}
+            {/*      colorScheme === 'light'*/}
+            {/*        ? 'rgba(0, 0, 0, 0.4)'*/}
+            {/*        : 'rgba(255, 255, 255, 0.4)'*/}
+            {/*    }*/}
+            {/*  />*/}
+            {/*</Pressable>*/}
             <Pressable
               onPress={() => {
                 router.push('/community-guidelines');
@@ -325,7 +325,8 @@ export default function Account() {
             {/*  />*/}
             {/*</Pressable>*/}
             <Pressable
-              onPress={() => {
+              onPress={async () => {
+                await AsyncStorage.clear();
                 signOut();
               }}
               className='flex-row items-center justify-between py-3 pb-4 pr-4 active:opacity-70'

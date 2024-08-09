@@ -10,7 +10,6 @@ export const useBadges = create(
     (set) => ({
       badges: [],
       addBadge: (badge: string) =>
-        // only add the badge if it's not already in the list
         set((state) => ({
           badges: state.badges.includes(badge)
             ? state.badges

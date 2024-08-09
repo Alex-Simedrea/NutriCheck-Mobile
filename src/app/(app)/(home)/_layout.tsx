@@ -72,6 +72,7 @@ export default function AppLayout() {
         options={{
           title: 'AI',
           headerTitle: 'AI',
+          href: null,
           tabBarLabel: ({ focused }) => (
             <Text
               style={{

@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const api = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: 'https://nutriback-seven.vercel.app',
 });
 
 api.interceptors.request.use(

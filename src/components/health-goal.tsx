@@ -1,7 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import { cn } from '@/lib/utils';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function HealthGoal({
   cur,
@@ -13,16 +12,18 @@ export default function HealthGoal({
   buttonText,
   buttonAction,
   onPress,
+  radius
 }: {
   cur: number;
   goal: number;
-  title: string;
+  title?: string;
   unit: string;
   className?: string;
   showButton?: boolean;
   buttonText?: string;
   buttonAction?: () => void;
   onPress?: () => void;
+  radius?: number;
 }) {
   if (cur === null) {
     return null;
@@ -38,17 +39,20 @@ export default function HealthGoal({
     >
       <CircularProgress
         value={cur}
-        maxValue={cur > goal ? cur : goal}
+        maxValue={Math.max(goal, cur)}
         subtitle={`/ ${goal} ${unit}`}
+        radius={radius}
       />
       <View className={'w-full items-center p-0'}>
-        <Text className={'text-2xl font-bold text-black dark:text-white'}>
-          {title}
-        </Text>
+        {title && (
+          <Text className={'text-2xl font-bold text-black dark:text-white'}>
+            {title}
+          </Text>
+        )}
         {showButton && (
           <Pressable
             onPress={buttonAction}
-            className={cn('mt mt-4 active:opacity-70 w-full')}
+            className={cn('mt mt-4 w-full active:opacity-70')}
           >
             <View className='dark:android:bg-blue-400 h-14 flex-row items-center justify-center rounded-[16.5] bg-default-blue px-10'>
               {/*<Ionicons*/}
@@ -57,7 +61,9 @@ export default function HealthGoal({
               {/*  color='white'*/}
               {/*  className={'mr-2'}*/}
               {/*/>*/}
-              <Text className='text-xl font-semibold text-white'>{buttonText}</Text>
+              <Text className='text-xl font-semibold text-white'>
+                {buttonText}
+              </Text>
             </View>
           </Pressable>
         )}

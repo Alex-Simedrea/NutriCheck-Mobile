@@ -174,7 +174,7 @@ export const useVoteProduct = () => {
                 : previousProduct.vote === false
                   ? old.downVotes - 1
                   : old.downVotes,
-            liked: like,
+            vote: like,
           };
         }
         return old;

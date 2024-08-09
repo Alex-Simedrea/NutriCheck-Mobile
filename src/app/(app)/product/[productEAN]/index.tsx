@@ -25,6 +25,10 @@ import { useGetPreferences } from '@/api/preferences';
 import { getMatchScore } from '@/lib/recommendations/match-score';
 import { getNutriScore } from '@/lib/nutriscore/nutri-score';
 import { FoodType } from '@/lib/nutriscore/types.d';
+import { useFood } from '@/data/food';
+import HealthGoal from '@/components/health-goal';
+import React from 'react';
+import { useGetGoals } from '@/api/goals';
 
 export default function Product() {
   const { productEAN } = useGlobalSearchParams();
@@ -34,8 +38,10 @@ export default function Product() {
   const deleteReview = useDeleteVote();
   const posts = useGetPostsByEAN(productEAN as string);
   const preferences = useGetPreferences();
+  const goals = useGetGoals();
 
   const cart = useCart();
+  const food = useFood();
 
   const { colorScheme } = useColorScheme();
 
@@ -49,7 +55,12 @@ export default function Product() {
     });
   }
 
-  if (product.isPending || offProduct.isPending || preferences.isPending) {
+  if (
+    product.isPending ||
+    offProduct.isPending ||
+    preferences.isPending ||
+    goals.isPending
+  ) {
     return <LoadingView />;
   }
 
@@ -84,6 +95,17 @@ export default function Product() {
       visibilityTime: 8000,
     });
     return <RetryView refetch={preferences.refetch} />;
+  }
+
+  if (goals.isError) {
+    Toast.show({
+      type: 'customToast',
+      text1: 'Error',
+      text2: goals.error.message,
+      position: 'bottom',
+      visibilityTime: 8000,
+    });
+    return <RetryView refetch={goals.refetch} />;
   }
 
   const mergedProduct = merge(
@@ -212,6 +234,19 @@ export default function Product() {
           />
         </View>
       )}
+      <HealthGoal
+        className='grow basis-0 mt-4'
+        cur={food.food}
+        goal={goals.data.food}
+        unit='kcal'
+        showButton={true}
+        buttonText='Log product'
+        buttonAction={() => {
+          food.setFood(
+            food.food + offProduct.data.product.nutriments['energy-kcal'],
+          );
+        }}
+      />
       <Caption text='Stats' />
       <View className='my-4 mt-0 divide-y divide-yellow-300 rounded-2xl bg-white pl-4 dark:bg-background-900'>
         <View className='flex-row items-center justify-between border-b-[0.7px] border-b-black/10 py-3 pr-4 pt-4 dark:border-b-white/10'>

@@ -100,6 +100,8 @@ export const getData = (
 export const getDeficits = (profile: Profile, products: Deficits[]) => {
 	const deficits: Deficits = {};
 
+	// console.log(products[0].proteins, 'ok');
+
 	const optimal = getData(
 		profile.weight,
 		profile.height,

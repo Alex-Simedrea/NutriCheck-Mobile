@@ -1,25 +1,17 @@
-import { ScrollView, Text, useWindowDimensions, View } from 'react-native';
-import CircularProgress from 'react-native-circular-progress-indicator';
+import { ScrollView, Text, View } from 'react-native';
 import Caption from '@/components/caption';
-import { useGetChallenge, useGetTeamProgress } from '@/api/challenges';
+import { useGetChallenge } from '@/api/challenges';
 import { useLocalSearchParams } from 'expo-router';
 import LoadingView from '@/components/loading-view';
 import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
 import { useGetTeams } from '@/api/teams';
-import { useEffect } from 'react';
-import ChallengeComponent from '@/assets/challenge-component';
 
 export default function Challenge() {
-  const { width } = useWindowDimensions();
   const { id } = useLocalSearchParams();
 
   const challenge = useGetChallenge(id as string);
   const teams = useGetTeams();
-
-  // useEffect(() => {
-  //   const progress = useGetTeamProgress(teams?.isSuccess ? teams.data.find(team => team.team.challengeID === id).teamID : '');
-  // }, [teams]);
 
   if (challenge.isPending || teams.isPending) {
     return <LoadingView />;
@@ -41,11 +33,9 @@ export default function Challenge() {
     <ScrollView className={'dark:bg-black'} contentContainerClassName={'px-4'}>
       <Caption text='Details' />
       <View
-        className={
-          'p-4 rounded-2xl bg-background-50 dark:bg-background-900'
-        }
+        className={'rounded-2xl bg-background-50 p-4 dark:bg-background-900'}
       >
-        <Text className='text-2xl text-black font-semibold dark:text-white'>
+        <Text className='text-2xl font-semibold text-black dark:text-white'>
           {challenge.data.title}
         </Text>
         <Text className='text-base text-black dark:text-white'>
@@ -64,8 +54,7 @@ export default function Challenge() {
       {/*    subtitle={`/ ${challenge.data.goal} ${challenge.data.unit}`}*/}
       {/*    radius={(width - 220) / 2}*/}
       {/*  />*/}
-        <ChallengeComponent teams={teams} id={id} challenge={challenge} />
       {/*</View>*/}
     </ScrollView>
-);
+  );
 }

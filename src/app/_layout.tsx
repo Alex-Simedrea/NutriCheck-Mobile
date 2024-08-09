@@ -1,7 +1,7 @@
 import '../global.css';
 import { SplashScreen, Stack } from 'expo-router';
 import { BlurView } from 'expo-blur';
-import { Text } from 'react-native';
+import { LogBox, Text } from 'react-native';
 import { useFonts } from 'expo-font';
 import { FontAwesome } from '@expo/vector-icons';
 import { useEffect } from 'react';
@@ -48,6 +48,8 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     ...FontAwesome.font,
   });
+
+  LogBox.ignoreAllLogs();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {

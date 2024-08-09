@@ -37,17 +37,20 @@ export default function SearchResults() {
               brand={item.brands}
               photoUrl={item.image_url}
               price={JSON.stringify(searchResults.data[index]?.upVotes)}
-              healthScore={getHealthScore(item?.nutriscore_grade?.toUpperCase() ??
-              item?.nutriscore_score
-                ? item?.nutriscore_grade?.toUpperCase()
-                : item?.nutriscore_data
-                  ? getNutriScore(
-                    item?.nutriscore_data,
-                    item?.nutriscore_data?.is_beverage
-                      ? FoodType.beverage
-                      : FoodType.solid,
-                  )?.toUpperCase()
-                  : 'N/A', searchResults.data[index]?.upVotes, searchResults.data[index]?.downVotes)}
+              healthScore={getHealthScore(
+                item?.nutriscore_grade?.toUpperCase() ?? item?.nutriscore_score
+                  ? item?.nutriscore_grade?.toUpperCase()
+                  : item?.nutriscore_data
+                    ? getNutriScore(
+                        item?.nutriscore_data,
+                        item?.nutriscore_data?.is_beverage
+                          ? FoodType.beverage
+                          : FoodType.solid,
+                      )?.toUpperCase()
+                    : 'N/A',
+                searchResults.data[index]?.upVotes,
+                searchResults.data[index]?.downVotes,
+              )}
               onPress={() => {
                 router.push(`/product/${item._id}`);
               }}

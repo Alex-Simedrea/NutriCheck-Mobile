@@ -1,14 +1,10 @@
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import ChallengeCard from '@/components/challenge-card';
-import { router } from 'expo-router';
+import { ScrollView } from 'react-native';
 import { useGetChallenges } from '@/api/challenges';
 import LoadingView from '@/components/loading-view';
 import React, { useEffect, useState } from 'react';
 import RetryView from '@/components/retry-view';
 import Toast from 'react-native-toast-message';
 import Caption from '@/components/caption';
-import { cn } from '@/lib/utils';
-import CircularProgress from 'react-native-circular-progress-indicator';
 import { useDay } from '@/data/day';
 import AppleHealthKit, {
   HealthKitPermissions,
@@ -16,6 +12,7 @@ import AppleHealthKit, {
 } from 'react-native-health';
 import api from '@/api/api';
 import { useBadges } from '@/data/badges';
+import HealthGoal from '@/components/health-goal';
 
 const dailyChallenges = [
   {
@@ -68,13 +65,13 @@ export default function Challenges() {
       );
     } else {
       if (
-        day.challenge.unit === 'kcal'
+        (day.challenge.unit === 'kcal'
           ? energy
           : day.challenge.unit === 'steps'
             ? steps
             : day.challenge.unit === 'minutes'
               ? exercise
-              : 0 === day.challenge.goal
+              : 0) >= day.challenge.goal
       ) {
         api.post('/profile/daily-challenge', {});
         badges.addBadge(
@@ -195,47 +192,42 @@ export default function Challenges() {
       contentContainerClassName={'px-4 pb-20 pt-4'}
     >
       <Caption text='Daily challenge' />
-      <Pressable
-        className={cn(
-          'w-full items-center rounded-2xl bg-white px-6 py-4 dark:bg-background-900',
-        )}
-      >
-        <CircularProgress
-          value={
-            day.challenge.unit === 'kcal'
-              ? energy
-              : day.challenge.unit === 'steps'
-                ? steps
-                : day.challenge.unit === 'minutes'
-                  ? exercise
-                  : 0
-          }
-          maxValue={day.challenge.goal}
-          subtitle={`/ ${day.challenge.goal} ${day.challenge.unit}`}
-          radius={100}
-        />
-      </Pressable>
-      <Caption text='Community challenges' />
-      <View className={'gap-3'}>
-        {challenges.data.length ? (
-          challenges.data.map((challenge, i) => (
-            <ChallengeCard
-              key={i}
-              {...challenge}
-              onPress={() => {
-                router.push({
-                  pathname: `/challenge`,
-                  params: { id: challenge.id },
-                });
-              }}
-            />
-          ))
-        ) : (
-          <Text className={'font-bold dark:text-white'}>
-            No challenges found
-          </Text>
-        )}
-      </View>
+      <HealthGoal
+        className='grow basis-0'
+        cur={
+          day.challenge.unit === 'kcal'
+            ? energy
+            : day.challenge.unit === 'steps'
+              ? steps
+              : day.challenge.unit === 'minutes'
+                ? exercise
+                : 0
+        }
+        goal={day.challenge.goal}
+        unit={day.challenge.unit}
+        radius={100}
+      />
+      {/*<Caption text='Community challenges' />*/}
+      {/*<View className={'gap-3'}>*/}
+      {/*  {challenges.data.length ? (*/}
+      {/*    challenges.data.map((challenge, i) => (*/}
+      {/*      <ChallengeCard*/}
+      {/*        key={i}*/}
+      {/*        {...challenge}*/}
+      {/*        onPress={() => {*/}
+      {/*          router.push({*/}
+      {/*            pathname: `/challenge`,*/}
+      {/*            params: { id: challenge.id },*/}
+      {/*          });*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    ))*/}
+      {/*  ) : (*/}
+      {/*    <Text className={'font-bold dark:text-white'}>*/}
+      {/*      No challenges found*/}
+      {/*    </Text>*/}
+      {/*  )}*/}
+      {/*</View>*/}
     </ScrollView>
   );
 }

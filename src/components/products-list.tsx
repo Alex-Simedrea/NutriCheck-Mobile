@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Product, ProductProps } from '@/api/product';
+import { Product } from '@/api/product';
 import { useCart } from '@/data/cart';
 import ProductCard from '@/components/product-card';
 import { router } from 'expo-router';
 import getHealthScore from '@/lib/health-score';
 import { mergeEachItemInLists } from '@/lib/utils';
 import Caption from '@/components/caption';
+import { getNutriScore } from '@/lib/nutriscore/nutri-score';
+import { FoodType } from '@/lib/nutriscore/types.d';
 
 export default function ProductsList({
   products,
@@ -30,7 +32,20 @@ export default function ProductsList({
             brand={item.brands}
             photoUrl={item.image_url}
             price={item.price}
-            healthScore={getHealthScore(item.nutriscore_score, products[index].upVotes, products[index].downVotes)}
+            healthScore={getHealthScore(
+              item?.nutriscore_grade?.toUpperCase() ?? item?.nutriscore_score
+                ? item?.nutriscore_grade?.toUpperCase()
+                : item?.nutriscore_data
+                  ? getNutriScore(
+                      item?.nutriscore_data,
+                      item?.nutriscore_data?.is_beverage
+                        ? FoodType.beverage
+                        : FoodType.solid,
+                    )?.toUpperCase()
+                  : 'N/A',
+              products[index]?.upVotes,
+              products[index]?.downVotes,
+            )}
             onPress={() => {
               router.push(`/product/${item._id}`);
             }}

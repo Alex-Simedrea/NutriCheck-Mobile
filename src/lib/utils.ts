@@ -82,3 +82,10 @@ export const mergeEachItemInLists = (A: any[], B: Product[]) => {
   }
   return result;
 };
+
+export function kebabToTitleCase(kebabCaseString) {
+  return kebabCaseString
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}

@@ -1,6 +1,5 @@
 import { ScrollView, View } from 'react-native';
 import AppleHealthKit, {
-  HealthActivity,
   HealthKitPermissions,
   HealthValue,
 } from 'react-native-health';
@@ -14,6 +13,8 @@ import { useGetGoals } from '@/api/goals';
 import LoadingView from '@/components/loading-view';
 import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
+import { useWater } from '@/data/water';
+import { useFood } from '@/data/food';
 
 const permissions = {
   permissions: {
@@ -30,17 +31,36 @@ export default function Health() {
   const [energy, setEnergy] = useState(null);
   const [exercise, setExercise] = useState(null);
 
+  const water = useWater();
+  const food = useFood();
+
   const goals = useGetGoals();
 
   useEffect(() => {
-    AppleHealthKit.initHealthKit(permissions, (error: string) => {
-      /* Called after we receive a response from the system */
+    if (
+      new Date(water.day).toLocaleDateString() !==
+      new Date().toLocaleDateString()
+    ) {
+      water.setDay(new Date().toISOString());
+      water.setWater(0);
+    }
+  }, [water.day, water.water]);
 
+  useEffect(() => {
+    if (
+      new Date(food.day).toLocaleDateString() !==
+      new Date().toLocaleDateString()
+    ) {
+      food.setDay(new Date().toISOString());
+      food.setFood(0);
+    }
+  }, [food.day, food.food]);
+
+  useEffect(() => {
+    AppleHealthKit.initHealthKit(permissions, (error: string) => {
       if (error) {
         console.log('[ERROR] Cannot grant permissions!');
       }
-
-      /* Can now read or write to HealthKit */
 
       const options = {
         startDate: new Date(+new Date() - 1000 * 24 * 60 * 60).toISOString(),
@@ -81,16 +101,6 @@ export default function Health() {
           setExercise(results[0]?.value);
         },
       );
-
-      const options2 = {
-        type: 'AmericanFootball' as HealthActivity, // See HealthActivity Enum
-        startDate: new Date(2024, 4, 6, 20, 0, 0, 0).toISOString(),
-        endDate: new Date(2024, 4, 6, 20, 30, 0, 0).toISOString(),
-        energyBurned: 50, // In Energy burned unit,
-        energyBurnedUnit: 'calorie',
-        distance: 50, // In Distance unit
-        distanceUnit: 'meter',
-      };
     });
   }, []);
 
@@ -120,11 +130,11 @@ export default function Health() {
         numberInterval={2}
         data={[
           {
-            Steps: steps / goals.data.steps,
-            Energy: energy / goals.data.energy,
-            Water: 0.9,
-            Food: 0.67,
-            Exercise: exercise ?? 0 / goals.data.exercise,
+            Steps: Math.min(steps / goals.data.steps, 1),
+            Energy: Math.min(energy / goals.data.energy, 1),
+            Water: Math.min(water.water / goals.data.water, 1),
+            Food: Math.min(food.food / goals.data.food, 1),
+            Exercise: Math.min(exercise ?? 0 / goals.data.exercise, 1),
           },
         ]}
         options={{
@@ -140,14 +150,6 @@ export default function Health() {
         goal={goals.data.energy}
         title='Energy'
         unit='kcal'
-        onPress={() => {
-          router.push({
-            pathname: '/goal',
-            params: {
-              goal: 'energy',
-            },
-          });
-        }}
       />
       <View className={'flex-row gap-4'}>
         <HealthGoal
@@ -168,21 +170,27 @@ export default function Health() {
       <View className={'flex-row gap-4'}>
         <HealthGoal
           className='grow basis-0'
-          cur={energy}
+          cur={water.water}
           goal={goals.data.water}
           title='Water'
           unit='ml'
           showButton={true}
           buttonText='Add 250ml'
+          buttonAction={() => {
+            water.setWater(water.water + 250);
+          }}
         />
         <HealthGoal
           className='grow basis-0'
-          cur={energy}
+          cur={food.food}
           goal={goals.data.food}
           title='Food'
           unit='kcal'
           showButton={true}
           buttonText='Add'
+          buttonAction={() => {
+            router.push('/products');
+          }}
         />
       </View>
       <LargeButton
