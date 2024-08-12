@@ -89,20 +89,14 @@ export default function Challenges() {
 
   useEffect(() => {
     AppleHealthKit.initHealthKit(permissions, (error: string) => {
-      /* Called after we receive a response from the system */
-
       if (error) {
         console.log('[ERROR] Cannot grant permissions!');
       }
-
-      /* Can now read or write to HealthKit */
 
       const options = {
         startDate: new Date(+new Date() - 1000 * 24 * 60 * 60).toISOString(),
         endDate: new Date().toISOString(),
       };
-
-      console.log(options);
 
       AppleHealthKit.getStepCount(
         options,
@@ -111,7 +105,7 @@ export default function Challenges() {
             console.log('[ERROR] Cannot get step count!');
           }
 
-          setSteps(results.value);
+          setSteps(results?.value ?? 0);
         },
       );
 
@@ -122,7 +116,7 @@ export default function Challenges() {
             console.log('[ERROR] Cannot get active energy burned!');
           }
 
-          setEnergy(results[0].value);
+          setEnergy(results[0]?.value ?? 0);
         },
       );
 
@@ -133,7 +127,7 @@ export default function Challenges() {
             console.log('[ERROR] Cannot get exercise time!');
           }
 
-          setExercise(results[0]?.value);
+          setExercise(results[0]?.value ?? 0);
         },
       );
     });

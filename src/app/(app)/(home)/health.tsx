@@ -67,8 +67,6 @@ export default function Health() {
         endDate: new Date().toISOString(),
       };
 
-      console.log(options);
-
       AppleHealthKit.getStepCount(
         options,
         (err: string, results: HealthValue) => {
@@ -76,7 +74,7 @@ export default function Health() {
             console.log('[ERROR] Cannot get step count!');
           }
 
-          setSteps(results.value);
+          setSteps(results?.value ?? 0);
         },
       );
 
@@ -87,7 +85,7 @@ export default function Health() {
             console.log('[ERROR] Cannot get active energy burned!');
           }
 
-          setEnergy(results[0].value);
+          setEnergy(results[0]?.value ?? 0);
         },
       );
 
@@ -98,7 +96,7 @@ export default function Health() {
             console.log('[ERROR] Cannot get exercise time!');
           }
 
-          setExercise(results[0]?.value);
+          setExercise(results[0]?.value ?? 0);
         },
       );
     });

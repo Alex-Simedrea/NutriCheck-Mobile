@@ -16,3 +16,5 @@ web-build/
 /ios/
 /android/
 .idea/
+certs/
+*.ipa

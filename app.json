@@ -2,6 +2,7 @@
   "expo": {
     "scheme": "nutricheck",
     "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
     "orientation": "portrait",
     "web": {
       "output": "static",
@@ -32,7 +33,7 @@
       }
     },
     "ios": {
-      "bundleIdentifier": "com.malloc.nutricheck"
+      "bundleIdentifier": "com.hackclub.nutricheck"
     },
     "android": {
       "package": "com.malloc.nutricheck"
