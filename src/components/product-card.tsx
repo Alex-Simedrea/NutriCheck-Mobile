@@ -87,8 +87,8 @@ export default function ProductCard({
                     ? 'text-red-500'
                     : 'text-yellow-500'
                   : healthScore >= 80
-                  ? 'text-green-500'
-                  : 'text-background-400',
+                    ? 'text-green-500'
+                    : 'text-background-400',
               )}
             >
               Health score: {healthScore}
@@ -102,7 +102,7 @@ export default function ProductCard({
         </View>
       </View>
       {cartItem ? (
-        <View className='w-full flex-1 flex-row justify-between pt-4'>
+        <View className='w-full flex-row justify-between pt-4'>
           <Stepper
             amount={amount}
             onIncrement={onIncrement}
@@ -120,7 +120,9 @@ export default function ProductCard({
             />
           </View>
         </View>
-      ) : null}
+      ) : (
+        <Text className='text-red-500'>nu</Text>
+      )}
       {suggestionItem ? (
         <LargeButton
           text='Add to shopping list'

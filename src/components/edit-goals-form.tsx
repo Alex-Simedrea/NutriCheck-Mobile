@@ -24,11 +24,11 @@ export default function EditGoalsForm({
   const updateGoals = useUpdateGoals();
   const inputAccessoryViewID = 'keyboard-accessory';
   const schema = yup.object({
-    energy: yup.number().required(),
-    steps: yup.number().required(),
-    exercise: yup.number().required(),
-    water: yup.number().required(),
-    food: yup.number().required(),
+    energy: yup.number().min(100).max(2000).required(),
+    steps: yup.number().min(1000).max(20000).required(),
+    exercise: yup.number().min(10).max(300).required(),
+    water: yup.number().min(1500).max(3000).required(),
+    food: yup.number().min(500).max(4000).required(),
   });
   const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -59,60 +59,65 @@ export default function EditGoalsForm({
           name='energy'
           placeholder='Energy'
           inputAccessoryViewID={inputAccessoryViewID}
-          errorText='Energy is required'
+          errorText='Energy must be between 100 and 2000 kcal'
           contentType='none'
           flex1={false}
           secureTextEntry={false}
-          displayName='Energy'
+          displayName='Energy (kcal)'
           inModal={true}
+          keyboardType='numeric'
         />
         <FormInput
           control={control}
           name='steps'
           placeholder='Steps'
           secureTextEntry={false}
-          errorText='Steps are required'
+          errorText='Steps must be between 1000 and 20000'
           flex1={false}
           inputAccessoryViewID={inputAccessoryViewID}
           contentType='none'
           displayName='Steps'
           inModal={true}
+          keyboardType='numeric'
         />
         <FormInput
           control={control}
           name='exercise'
           placeholder='Exercise'
           secureTextEntry={false}
-          errorText='Exercise is required'
+          errorText='Exercise must be between 10 and 300 minutes'
           flex1={false}
           inputAccessoryViewID={inputAccessoryViewID}
           contentType='none'
-          displayName='Exercise'
+          displayName='Exercise (minutes)'
           inModal={true}
+          keyboardType='numeric'
         />
         <FormInput
           control={control}
           name='water'
           placeholder='Water'
           secureTextEntry={false}
-          errorText='Water is required'
+          errorText='Water must be between 1500 and 3000 ml'
           flex1={false}
           inputAccessoryViewID={inputAccessoryViewID}
           contentType='none'
-          displayName='Water'
+          displayName='Water (ml)'
           inModal={true}
+          keyboardType='numeric'
         />
         <FormInput
           control={control}
           name='food'
-          placeholder='Food'
+          placeholder='Food intake'
           secureTextEntry={false}
-          errorText='Food is required'
+          errorText='Food intake must be between 500 and 4000 kcal'
           flex1={false}
           inputAccessoryViewID={inputAccessoryViewID}
           contentType='none'
-          displayName='Food'
+          displayName='Food intake (kcal)'
           inModal={true}
+          keyboardType='numeric'
         />
         <LargeButton
           className='mt-4'

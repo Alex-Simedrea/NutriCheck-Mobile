@@ -19,6 +19,7 @@ export default function ScanCode() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
+    router.back();
     router.push(`/product/${data}`);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };

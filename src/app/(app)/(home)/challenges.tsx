@@ -199,7 +199,9 @@ export default function Challenges() {
         }
         goal={day.challenge.goal}
         unit={day.challenge.unit}
-        radius={100}
+        size={200}
+        titleClassName='text-5xl'
+        subtitleClassName='text-xl'
       />
       {/*<Caption text='Community challenges' />*/}
       {/*<View className={'gap-3'}>*/}

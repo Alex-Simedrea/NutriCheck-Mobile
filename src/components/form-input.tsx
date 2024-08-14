@@ -1,4 +1,4 @@
-import { KeyboardType, Text, TextInput, View } from 'react-native';
+import { KeyboardType, KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 import { Controller } from 'react-hook-form';
 import React from 'react';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ const FormInput = ({
   displayName?: string;
   shouldError?: boolean;
   inModal?: boolean;
-  keyboardType?: KeyboardType;
+  keyboardType?: KeyboardTypeOptions;
 }) => {
   return (
     <View className={cn('w-full', flex1 ? 'flex-1' : '')}>

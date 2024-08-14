@@ -1,11 +1,9 @@
-import { ScrollView, Text } from 'react-native';
 import React from 'react';
 import EditBodyProfileForm from '@/components/edit-body-profile-form';
-import { useGetPreferences } from '@/api/preferences';
 import LoadingView from '@/components/loading-view';
 import RetryView from '@/components/retry-view';
-import EditAccountForm from '@/components/edit-account-form';
 import { useGetBodyProfile } from '@/api/body-profile';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function BodyProfile() {
   const preferences = useGetBodyProfile();
@@ -20,7 +18,7 @@ export default function BodyProfile() {
 
   return (
     <>
-      <ScrollView
+      <KeyboardAwareScrollView
         className='bg-white dark:bg-background-900'
         contentContainerClassName={'px-4 pb-20'}
       >
@@ -36,7 +34,7 @@ export default function BodyProfile() {
             breastfeeding: preferences.data?.special?.breastfeeding ?? false,
           }}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </>
   );
 }

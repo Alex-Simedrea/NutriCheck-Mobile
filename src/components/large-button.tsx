@@ -27,7 +27,7 @@ export default function LargeButton({
             className={cn(text ? 'mr-2' : '')}
           />
         )}
-        <Text className='text-xl font-semibold text-white'>{text}</Text>
+        <Text className='text-lg font-semibold text-white'>{text}</Text>
       </View>
     </Pressable>
   );

@@ -38,9 +38,9 @@ export default function EditBodyProfileForm({
   const updatePreferences = useUpdateBodyProfile();
 
   const schema = yup.object({
-    weight: yup.number().required().min(0),
-    height: yup.number().required().min(0),
-    age: yup.number().required().min(0),
+    weight: yup.number().required("Weight is required").min(30, "Weight must be between 30 and 200 kg").max(200, "Weight must be between 30 and 200 kg"),
+    height: yup.number().required("Height is required").min(100, "Height must be between 100 and 250 cm").max(250, "Height must be between 100 and 250 cm"),
+    age: yup.number().required("Age is required").min(18, "Age must be between 18 and 100 y/o").max(100, "Age must be between 18 and 100 y/o"),
     sex: yup.string().required(),
     activityLevel: yup.number().required().min(1).max(2.4),
     special: yup.object({
@@ -86,8 +86,8 @@ export default function EditBodyProfileForm({
           name='weight'
           placeholder='Weight'
           secureTextEntry={false}
-          inputAccessoryViewID='weight'
-          errorText={errors.weight?.message}
+          inputAccessoryViewID={keyboardAccessoryViewID}
+          errorText={errors.weight?.message.includes('number') ? "Weight is required" : errors.weight?.message}
           contentType='none'
           flex1={true}
           keyboardType='numeric'
@@ -99,8 +99,8 @@ export default function EditBodyProfileForm({
           name='height'
           placeholder='Height'
           secureTextEntry={false}
-          inputAccessoryViewID='height'
-          errorText={errors.height?.message}
+          inputAccessoryViewID={keyboardAccessoryViewID}
+          errorText={errors.height?.message.includes('number') ? "Height is required" : errors.height?.message}
           contentType='none'
           flex1={true}
           keyboardType='numeric'
@@ -112,8 +112,8 @@ export default function EditBodyProfileForm({
           name='age'
           placeholder='Age'
           secureTextEntry={false}
-          inputAccessoryViewID='age'
-          errorText={errors.age?.message}
+          inputAccessoryViewID={keyboardAccessoryViewID}
+          errorText={errors.age?.message.includes('number') ? "Age is required" : errors.age?.message}
           contentType='none'
           flex1={true}
           keyboardType='numeric'

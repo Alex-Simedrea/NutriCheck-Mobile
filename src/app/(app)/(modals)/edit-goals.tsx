@@ -5,6 +5,7 @@ import LoadingView from '@/components/loading-view';
 import RetryView from '@/components/retry-view';
 import Toast from 'react-native-toast-message';
 import EditGoalsForm from '@/components/edit-goals-form';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function EditGoals() {
   const goals = useGetGoals();
@@ -24,7 +25,7 @@ export default function EditGoals() {
   }
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       className={'bg-white dark:bg-background-900'}
       contentContainerClassName={'px-4 pt-4'}
     >
@@ -35,6 +36,6 @@ export default function EditGoals() {
         food={goals.data?.food.toString() ?? '2000'}
         exercise={goals.data?.exercise.toString() ?? '30'}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

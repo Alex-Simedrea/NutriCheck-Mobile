@@ -1,4 +1,9 @@
-import { ScrollView, View } from 'react-native';
+import {
+  RefreshControl,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import AppleHealthKit, {
   HealthKitPermissions,
   HealthValue,
@@ -26,10 +31,71 @@ const permissions = {
   },
 } as HealthKitPermissions;
 
+function setHealthData({
+  setSteps,
+  setEnergy,
+  setExercise,
+}: {
+  setSteps: (steps: number) => void;
+  setEnergy: (energy: number) => void;
+  setExercise: (exercise: number) => void;
+}) {
+  AppleHealthKit.initHealthKit(permissions, (error: string) => {
+    if (error) {
+      console.log('[ERROR] Cannot grant permissions!');
+    }
+
+    const options = {
+      startDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+      ).toISOString(),
+      endDate: new Date().toISOString(),
+    };
+
+    AppleHealthKit.getStepCount(
+      options,
+      (err: string, results: HealthValue) => {
+        if (err) {
+          console.log('[ERROR] Cannot get step count!');
+        }
+
+        setSteps(results?.value ?? 0);
+      },
+    );
+
+    AppleHealthKit.getActiveEnergyBurned(
+      options,
+      (err: string, results: HealthValue[]) => {
+        if (err) {
+          console.log('[ERROR] Cannot get active energy burned!');
+        }
+
+        const energy = results?.reduce((acc, cur) => acc + cur.value, 0);
+        setEnergy(energy);
+      },
+    );
+
+    AppleHealthKit.getAppleExerciseTime(
+      options,
+      (err: string, results: HealthValue[]) => {
+        if (err) {
+          console.log('[ERROR] Cannot get exercise time!');
+        }
+
+        setExercise(results[0]?.value / 60 ?? 0);
+      },
+    );
+  });
+}
+
 export default function Health() {
   const [steps, setSteps] = useState(null);
   const [energy, setEnergy] = useState(null);
   const [exercise, setExercise] = useState(null);
+
+  const { width } = useWindowDimensions();
 
   const water = useWater();
   const food = useFood();
@@ -57,49 +123,7 @@ export default function Health() {
   }, [food.day, food.food]);
 
   useEffect(() => {
-    AppleHealthKit.initHealthKit(permissions, (error: string) => {
-      if (error) {
-        console.log('[ERROR] Cannot grant permissions!');
-      }
-
-      const options = {
-        startDate: new Date(+new Date() - 1000 * 24 * 60 * 60).toISOString(),
-        endDate: new Date().toISOString(),
-      };
-
-      AppleHealthKit.getStepCount(
-        options,
-        (err: string, results: HealthValue) => {
-          if (err) {
-            console.log('[ERROR] Cannot get step count!');
-          }
-
-          setSteps(results?.value ?? 0);
-        },
-      );
-
-      AppleHealthKit.getActiveEnergyBurned(
-        options,
-        (err: string, results: HealthValue[]) => {
-          if (err) {
-            console.log('[ERROR] Cannot get active energy burned!');
-          }
-
-          setEnergy(results[0]?.value ?? 0);
-        },
-      );
-
-      AppleHealthKit.getAppleExerciseTime(
-        options,
-        (err: string, results: HealthValue[]) => {
-          if (err) {
-            console.log('[ERROR] Cannot get exercise time!');
-          }
-
-          setExercise(results[0]?.value ?? 0);
-        },
-      );
-    });
+    setHealthData({ setSteps, setEnergy, setExercise });
   }, []);
 
   if (goals.isPending) {
@@ -120,29 +144,41 @@ export default function Health() {
   return (
     <ScrollView
       className={'dark:bg-black'}
-      contentContainerClassName={'gap-4 px-4 pb-20'}
+      contentContainerClassName={'gap-4 px-4 pb-20 pt-4'}
+      refreshControl={
+        <RefreshControl
+          refreshing={goals.isRefetching}
+          onRefresh={async () => {
+            await goals.refetch();
+            setHealthData({ setSteps, setEnergy, setExercise });
+          }}
+        />
+      }
     >
-      <RadarChart
-        graphSize={300}
-        scaleCount={5}
-        numberInterval={2}
-        data={[
-          {
-            Steps: Math.min(steps / goals.data.steps, 1),
-            Energy: Math.min(energy / goals.data.energy, 1),
-            Water: Math.min(water.water / goals.data.water, 1),
-            Food: Math.min(food.food / goals.data.food, 1),
-            Exercise: Math.min(exercise ?? 0 / goals.data.exercise, 1),
-          },
-        ]}
-        options={{
-          graphShape: 1,
-          showAxis: true,
-          showIndicator: false,
-          dotList: [false, true],
-        }}
-      />
-      <Caption text='Your goals' className='mt-4' />
+      <Caption text='Overview' />
+      <View className='rounded-2xl bg-white dark:bg-background-900'>
+        <RadarChart
+          graphSize={width - 32}
+          scaleCount={5}
+          numberInterval={2}
+          data={[
+            {
+              Steps: Math.min(steps / goals.data.steps, 1),
+              Energy: Math.min(energy / goals.data.energy, 1),
+              Water: Math.min(water.water / goals.data.water, 1),
+              Food: Math.min(food.food / goals.data.food, 1),
+              Exercise: Math.min(exercise ?? 0 / goals.data.exercise, 1),
+            },
+          ]}
+          options={{
+            graphShape: 1,
+            showAxis: true,
+            showIndicator: false,
+            dotList: [false, true],
+          }}
+        />
+      </View>
+      <Caption text='Your goals' />
       <HealthGoal
         cur={energy ?? 0}
         goal={goals.data.energy}
@@ -197,6 +233,7 @@ export default function Health() {
           router.push('/edit-goals');
         }}
         className='mt-8'
+        iconName='create-outline'
       />
     </ScrollView>
   );

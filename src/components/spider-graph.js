@@ -1,5 +1,5 @@
-import React from "react";
-import Svg, { G, Path, Text, Polyline } from "react-native-svg";
+import React from 'react';
+import Svg, { G, Path, Polyline, Text } from 'react-native-svg';
 import { useWindowDimensions } from 'react-native';
 import { useColorScheme } from 'nativewind';
 
@@ -12,8 +12,8 @@ export default function RadarChart({
 }) {
   const boxSize = graphSize * 3;
   const centerPos = boxSize / 2;
-  const {width} = useWindowDimensions();
-  const {colorScheme} = useColorScheme();
+  const { width } = useWindowDimensions();
+  const { colorScheme } = useColorScheme();
 
   // Top start pos -90 degree
   const posX = (angle, distance) =>
@@ -22,11 +22,11 @@ export default function RadarChart({
     Math.sin(angle - Math.PI / 2) * distance * graphSize;
 
   const initPath = (points) => {
-    let d = "M" + points[0][0].toFixed(4) + "," + points[0][1].toFixed(4);
+    let d = 'M' + points[0][0].toFixed(4) + ',' + points[0][1].toFixed(4);
     for (let i = 1; i < points.length; i++) {
-      d += "L" + points[i][0].toFixed(4) + "," + points[i][1].toFixed(4);
+      d += 'L' + points[i][0].toFixed(4) + ',' + points[i][1].toFixed(4);
     }
-    return d + "z";
+    return d + 'z';
   };
 
   const scaleShape = (columns, i) => {
@@ -39,11 +39,11 @@ export default function RadarChart({
               posX(column.angle, i / scaleCount),
               posY(column.angle, i / scaleCount),
             ];
-          })
+          }),
         )}
         stroke={colorScheme === 'dark' ? `#ffffff` : '#000000'}
         fill={`transparent`}
-        fillOpacity="1"
+        fillOpacity='1'
       />
     );
   };
@@ -61,21 +61,21 @@ export default function RadarChart({
               posX(column.angle, data[column.key]),
               posY(column.angle, data[column.key]),
             ];
-          })
+          }),
         )}
         // strokeDasharray={dot}
         // stroke={colorCode}
-        strokeWidth="2.5"
+        strokeWidth='2.5'
         fill={`#2e83ff`}
-        fillOpacity=".5"
+        fillOpacity='.5'
       />
     );
   };
 
   const points = (points) => {
     return points
-      .map((point) => point[0].toFixed(4) + "," + point[1].toFixed(4))
-      .join(" ");
+      .map((point) => point[0].toFixed(4) + ',' + point[1].toFixed(4))
+      .join(' ');
   };
 
   const axis = () => (column, i) => {
@@ -87,7 +87,7 @@ export default function RadarChart({
           [posX(column.angle, 1.1), posY(column.angle, 1.1)],
         ])}
         stroke={colorScheme === 'dark' ? `#ffffff` : '#000000'}
-        strokeWidth=".5"
+        strokeWidth='.5'
       />
     );
   };
@@ -100,10 +100,9 @@ export default function RadarChart({
         y={posY(column.angle, 1.2)}
         dy={10 / 2}
         fill={colorScheme === 'dark' ? `#ffffff` : '#000000'}
-
-        fontWeight="bold"
-        fontSize="30"
-        textAnchor="middle"
+        fontWeight='bold'
+        fontSize='30'
+        textAnchor='middle'
       >
         {column.key}
       </Text>
@@ -117,9 +116,9 @@ export default function RadarChart({
         x={-20}
         y={-((i / scaleCount) * graphSize)}
         stroke={colorScheme === 'dark' ? `#ffffff` : '#000000'}
-        fontWeight="bold"
-        fontSize="30"
-        textAnchor="middle"
+        fontWeight='bold'
+        fontSize='30'
+        textAnchor='middle'
       >
         {i}
       </Text>
@@ -154,10 +153,10 @@ export default function RadarChart({
   }
   return (
     <Svg
-      version="1"
-      xmlns="http://www.w3.org/2000/svg"
-      width={width - 8}
-      height={width - 8}
+      version='1'
+      xmlns='http://www.w3.org/2000/svg'
+      width={graphSize}
+      height={graphSize}
       viewBox={`0 0 ${boxSize} ${boxSize}`}
     >
       <G transform={`translate(${centerPos},${centerPos})`}>{groups}</G>
