@@ -5,6 +5,7 @@ import Toast, { ToastConfig } from 'react-native-toast-message';
 import { BlurView } from 'expo-blur';
 import HeaderCloseButton from '@/components/header-close-button';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+import { StatusBar } from 'expo-status-bar';
 
 const toastConfig: ToastConfig = {
   customToast: ({ text1, text2 }: { text1?: string; text2?: string }) => {
@@ -244,6 +245,7 @@ export default function ModalsLayout() {
         />
       </Stack>
       <Toast config={toastConfig} />
+      <StatusBar style='auto' />
     </AutocompleteDropdownContextProvider>
   );
 }

@@ -87,7 +87,7 @@ export default function Products() {
   return (
     <ScrollView
       className={'px-4 pt-4 dark:bg-black'}
-      contentContainerClassName={'pb-4'}
+      contentContainerClassName={'pb-20'}
       refreshControl={
         <RefreshControl
           refreshing={products.isRefetching}

@@ -4,10 +4,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import AppleHealthKit, {
-  HealthKitPermissions,
-  HealthValue,
-} from 'react-native-health';
 import React, { useEffect, useState } from 'react';
 import RadarChart from '@/components/spider-graph';
 import HealthGoal from '@/components/health-goal';
@@ -20,75 +16,7 @@ import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
 import { useWater } from '@/data/water';
 import { useFood } from '@/data/food';
-
-const permissions = {
-  permissions: {
-    read: [
-      AppleHealthKit.Constants.Permissions.Steps,
-      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
-      AppleHealthKit.Constants.Permissions.AppleExerciseTime,
-    ],
-  },
-} as HealthKitPermissions;
-
-function setHealthData({
-  setSteps,
-  setEnergy,
-  setExercise,
-}: {
-  setSteps: (steps: number) => void;
-  setEnergy: (energy: number) => void;
-  setExercise: (exercise: number) => void;
-}) {
-  AppleHealthKit.initHealthKit(permissions, (error: string) => {
-    if (error) {
-      console.log('[ERROR] Cannot grant permissions!');
-    }
-
-    const options = {
-      startDate: new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate(),
-      ).toISOString(),
-      endDate: new Date().toISOString(),
-    };
-
-    AppleHealthKit.getStepCount(
-      options,
-      (err: string, results: HealthValue) => {
-        if (err) {
-          console.log('[ERROR] Cannot get step count!');
-        }
-
-        setSteps(results?.value ?? 0);
-      },
-    );
-
-    AppleHealthKit.getActiveEnergyBurned(
-      options,
-      (err: string, results: HealthValue[]) => {
-        if (err) {
-          console.log('[ERROR] Cannot get active energy burned!');
-        }
-
-        const energy = results?.reduce((acc, cur) => acc + cur.value, 0);
-        setEnergy(energy);
-      },
-    );
-
-    AppleHealthKit.getAppleExerciseTime(
-      options,
-      (err: string, results: HealthValue[]) => {
-        if (err) {
-          console.log('[ERROR] Cannot get exercise time!');
-        }
-
-        setExercise(results[0]?.value / 60 ?? 0);
-      },
-    );
-  });
-}
+import { setHealthData } from '@/lib/utils';
 
 export default function Health() {
   const [steps, setSteps] = useState(null);
@@ -167,7 +95,7 @@ export default function Health() {
               Energy: Math.min(energy / goals.data.energy, 1),
               Water: Math.min(water.water / goals.data.water, 1),
               Food: Math.min(food.food / goals.data.food, 1),
-              Exercise: Math.min(exercise ?? 0 / goals.data.exercise, 1),
+              Exercise: Math.min((exercise ?? 0) / goals.data.exercise, 1),
             },
           ]}
           options={{

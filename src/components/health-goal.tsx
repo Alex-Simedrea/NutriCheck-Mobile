@@ -48,7 +48,7 @@ export default function HealthGoal({
         rotation={0}
         tintColor='#2ecc71'
         onAnimationComplete={() => console.log('onAnimationComplete')}
-        backgroundColor='#121212'
+        backgroundColor='#40404050'
         lineCap='round'
       >
         {() => (

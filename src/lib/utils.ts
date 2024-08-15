@@ -1,6 +1,10 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { Product } from '@/api/product';
+import AppleHealthKit, {
+  HealthKitPermissions,
+  HealthValue,
+} from 'react-native-health';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -86,6 +90,76 @@ export const mergeEachItemInLists = (A: any[], B: Product[]) => {
 export function kebabToTitleCase(kebabCaseString) {
   return kebabCaseString
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
+}
+
+const permissions = {
+  permissions: {
+    read: [
+      AppleHealthKit.Constants.Permissions.Steps,
+      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+      AppleHealthKit.Constants.Permissions.AppleExerciseTime,
+    ],
+  },
+} as HealthKitPermissions;
+
+export function setHealthData({
+  setSteps,
+  setEnergy,
+  setExercise,
+}: {
+  setSteps: (steps: number) => void;
+  setEnergy: (energy: number) => void;
+  setExercise: (exercise: number) => void;
+}) {
+  AppleHealthKit.initHealthKit(permissions, (error: string) => {
+    if (error) {
+      console.log('[ERROR] Cannot grant permissions!');
+    }
+
+    const options = {
+      startDate: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+      ).toISOString(),
+      endDate: new Date().toISOString(),
+    };
+
+    AppleHealthKit.getStepCount(
+      options,
+      (err: string, results: HealthValue) => {
+        if (err) {
+          console.log('[ERROR] Cannot get step count!');
+        }
+
+        setSteps(results?.value ? results?.value : 0);
+      },
+    );
+
+    AppleHealthKit.getActiveEnergyBurned(
+      options,
+      (err: string, results: HealthValue[]) => {
+        if (err) {
+          console.log('[ERROR] Cannot get active energy burned!');
+        }
+
+        const energy = results?.reduce((acc, cur) => acc + cur.value, 0);
+        setEnergy(energy);
+      },
+    );
+
+    AppleHealthKit.getAppleExerciseTime(
+      options,
+      (err: string, results: HealthValue[]) => {
+        if (err) {
+          console.log('[ERROR] Cannot get exercise time!');
+        }
+
+        const exercise = results[0]?.value;
+        setExercise(exercise ? exercise / 60 : 0);
+      },
+    );
+  });
 }

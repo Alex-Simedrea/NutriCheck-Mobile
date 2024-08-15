@@ -7,13 +7,13 @@ import {
 } from '@/lib/recommendations/nutriment-calculator';
 import { Preferences } from '@/api/preferences';
 import Caption from '@/components/caption';
-import ProductCard from '@/components/product-card';
-import { router } from 'expo-router';
 import LoadingView from '@/components/loading-view';
 import Toast from 'react-native-toast-message';
 import RetryView from '@/components/retry-view';
 import { useCart } from '@/data/cart';
 import { kebabToTitleCase } from '@/lib/utils';
+import List from '@/components/list';
+import ListItem from '@/components/list-item';
 
 export default function RecommendationsList({
   products,
@@ -99,64 +99,87 @@ export default function RecommendationsList({
       {/*  </Text>*/}
       {/*)}*/}
       <Caption text='Deficits' className='pt-6' />
-      {Object.entries(
-        getDeficits(
-          {
-            weight: bodyProfile?.weight ?? 75,
-            height: bodyProfile?.height ?? 170,
-            age: bodyProfile?.age ?? 25,
-            sex: bodyProfile?.sex ?? 'male',
-            activityLevel: bodyProfile?.activityLevel ?? 1,
-            special: {
-              pregnant: bodyProfile?.special?.pregnant ?? false,
-              trimester: bodyProfile?.special?.trimester ?? 1,
-            },
-          },
-          products.map((product: ProductProps) => product.nutriments ?? {}),
-        ).deficits,
-      ).map(([key, value], index) => {
-        return (
-          <View key={index}>
-            <Text className={'dark:text-white'}>{`${kebabToTitleCase(key)}: ${value}\n`}</Text>
-          </View>
-        );
-      })}
-      <View>
-        <Text className={'dark:text-white'}>{`BMR: ${
-          getDeficits(
-            {
-              weight: bodyProfile?.weight ?? 75,
-              height: bodyProfile?.height ?? 170,
-              age: bodyProfile?.age ?? 25,
-              sex: bodyProfile?.sex ?? 'male',
-              activityLevel: bodyProfile?.activityLevel ?? 1,
-              special: {
-                pregnant: bodyProfile?.special?.pregnant ?? false,
-                trimester: bodyProfile?.special?.trimester ?? 1,
+      <List>
+        {
+          Object.entries(
+            getDeficits(
+              {
+                weight: bodyProfile?.weight ?? 75,
+                height: bodyProfile?.height ?? 170,
+                age: bodyProfile?.age ?? 25,
+                sex: bodyProfile?.sex ?? 'male',
+                activityLevel: bodyProfile?.activityLevel ?? 1,
+                special: {
+                  pregnant: bodyProfile?.special?.pregnant ?? false,
+                  trimester: bodyProfile?.special?.trimester ?? 1,
+                },
               },
-            },
-            products.map((product: ProductProps) => product.nutriments ?? {}),
-          ).bmr
-        }\n`}</Text>
-      </View>
-      <View>
-        <Text className={'dark:text-white'}>{`EER: ${
-          getDeficits(
-            {
-              weight: bodyProfile?.weight ?? 75,
-              height: bodyProfile?.height ?? 170,
-              age: bodyProfile?.age ?? 25,
-              sex: bodyProfile?.sex ?? 'male',
-              activityLevel: bodyProfile?.activityLevel ?? 1,
-              special: {
-                pregnant: bodyProfile?.special?.pregnant ?? false,
-                trimester: bodyProfile?.special?.trimester ?? 1,
-              },
-            },
-            products.map((product: ProductProps) => product.nutriments ?? {}),
-          ).eer
-        }\n`}</Text>
-      </View>
+              products.map((product: ProductProps) => product.nutriments ?? {}),
+            ).deficits,
+          ).map(([key, value], index) => {
+            return (
+              <ListItem
+                text={kebabToTitleCase(key)}
+                key={index}
+                rightComponent={<Text>{value.toFixed(2)}</Text>}
+                shouldPress={false}
+              />
+            );
+          }) as any
+        }
+        <ListItem
+          text={'BMR'}
+          shouldPress={false}
+          rightComponent={
+            <Text>
+              {
+                getDeficits(
+                  {
+                    weight: bodyProfile?.weight ?? 75,
+                    height: bodyProfile?.height ?? 170,
+                    age: bodyProfile?.age ?? 25,
+                    sex: bodyProfile?.sex ?? 'male',
+                    activityLevel: bodyProfile?.activityLevel ?? 1,
+                    special: {
+                      pregnant: bodyProfile?.special?.pregnant ?? false,
+                      trimester: bodyProfile?.special?.trimester ?? 1,
+                    },
+                  },
+                  products.map(
+                    (product: ProductProps) => product.nutriments ?? {},
+                  ),
+                ).bmr.toFixed(0)
+              }
+            </Text>
+          }
+        />
+        <ListItem
+          text={'EER'}
+          shouldPress={false}
+          rightComponent={
+            <Text>
+              {
+                getDeficits(
+                  {
+                    weight: bodyProfile?.weight ?? 75,
+                    height: bodyProfile?.height ?? 170,
+                    age: bodyProfile?.age ?? 25,
+                    sex: bodyProfile?.sex ?? 'male',
+                    activityLevel: bodyProfile?.activityLevel ?? 1,
+                    special: {
+                      pregnant: bodyProfile?.special?.pregnant ?? false,
+                      trimester: bodyProfile?.special?.trimester ?? 1,
+                    },
+                  },
+                  products.map(
+                    (product: ProductProps) => product.nutriments ?? {},
+                  ),
+                ).eer.toFixed(0)
+              }
+            </Text>
+          }
+        />
+      </List>
     </View>
   );
 }

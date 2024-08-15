@@ -120,9 +120,7 @@ export default function ProductCard({
             />
           </View>
         </View>
-      ) : (
-        <Text className='text-red-500'>nu</Text>
-      )}
+      ) : null}
       {suggestionItem ? (
         <LargeButton
           text='Add to shopping list'

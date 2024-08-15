@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import { useGetChallenges } from '@/api/challenges';
 import LoadingView from '@/components/loading-view';
 import React, { useEffect, useState } from 'react';
@@ -6,13 +6,11 @@ import RetryView from '@/components/retry-view';
 import Toast from 'react-native-toast-message';
 import Caption from '@/components/caption';
 import { useDay } from '@/data/day';
-import AppleHealthKit, {
-  HealthKitPermissions,
-  HealthValue,
-} from 'react-native-health';
+import AppleHealthKit, { HealthKitPermissions } from 'react-native-health';
 import api from '@/api/api';
 import { useBadges } from '@/data/badges';
 import HealthGoal from '@/components/health-goal';
+import { setHealthData } from '@/lib/utils';
 
 const dailyChallenges = [
   {
@@ -51,11 +49,15 @@ export default function Challenges() {
   const challenges = useGetChallenges();
   const day = useDay();
 
-  const [steps, setSteps] = useState(null);
-  const [energy, setEnergy] = useState(null);
-  const [exercise, setExercise] = useState(null);
+  const [steps, setSteps] = useState(0);
+  const [energy, setEnergy] = useState(0);
+  const [exercise, setExercise] = useState(0);
 
   const badges = useBadges();
+
+  useEffect(() => {
+    setHealthData({ setSteps, setEnergy, setExercise });
+  }, []);
 
   useEffect(() => {
     if (new Date(day.day).getDate() !== new Date().getDate()) {
@@ -86,52 +88,6 @@ export default function Challenges() {
       }
     }
   }, [day, steps, energy, exercise]);
-
-  useEffect(() => {
-    AppleHealthKit.initHealthKit(permissions, (error: string) => {
-      if (error) {
-        console.log('[ERROR] Cannot grant permissions!');
-      }
-
-      const options = {
-        startDate: new Date(+new Date() - 1000 * 24 * 60 * 60).toISOString(),
-        endDate: new Date().toISOString(),
-      };
-
-      AppleHealthKit.getStepCount(
-        options,
-        (err: string, results: HealthValue) => {
-          if (err) {
-            console.log('[ERROR] Cannot get step count!');
-          }
-
-          setSteps(results?.value ?? 0);
-        },
-      );
-
-      AppleHealthKit.getActiveEnergyBurned(
-        options,
-        (err: string, results: HealthValue[]) => {
-          if (err) {
-            console.log('[ERROR] Cannot get active energy burned!');
-          }
-
-          setEnergy(results[0]?.value ?? 0);
-        },
-      );
-
-      AppleHealthKit.getAppleExerciseTime(
-        options,
-        (err: string, results: HealthValue[]) => {
-          if (err) {
-            console.log('[ERROR] Cannot get exercise time!');
-          }
-
-          setExercise(results[0]?.value ?? 0);
-        },
-      );
-    });
-  }, []);
 
   if (challenges.isPending) {
     return <LoadingView />;
@@ -184,6 +140,14 @@ export default function Challenges() {
     <ScrollView
       className={'dark:bg-black'}
       contentContainerClassName={'px-4 pb-20 pt-4'}
+      refreshControl={
+        <RefreshControl
+          refreshing={false}
+          onRefresh={async () => {
+            setHealthData({ setSteps, setEnergy, setExercise });
+          }}
+        />
+      }
     >
       <Caption text='Daily challenge' />
       <HealthGoal
