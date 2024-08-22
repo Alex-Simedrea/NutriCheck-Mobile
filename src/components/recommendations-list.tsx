@@ -121,7 +121,11 @@ export default function RecommendationsList({
               <ListItem
                 text={kebabToTitleCase(key)}
                 key={index}
-                rightComponent={<Text>{value.toFixed(2)}</Text>}
+                rightComponent={
+                  <Text className='text-lg text-black dark:text-white'>
+                    {value.toFixed(2)}
+                  </Text>
+                }
                 shouldPress={false}
               />
             );
@@ -131,25 +135,23 @@ export default function RecommendationsList({
           text={'BMR'}
           shouldPress={false}
           rightComponent={
-            <Text>
-              {
-                getDeficits(
-                  {
-                    weight: bodyProfile?.weight ?? 75,
-                    height: bodyProfile?.height ?? 170,
-                    age: bodyProfile?.age ?? 25,
-                    sex: bodyProfile?.sex ?? 'male',
-                    activityLevel: bodyProfile?.activityLevel ?? 1,
-                    special: {
-                      pregnant: bodyProfile?.special?.pregnant ?? false,
-                      trimester: bodyProfile?.special?.trimester ?? 1,
-                    },
+            <Text className='text-lg text-black dark:text-white'>
+              {getDeficits(
+                {
+                  weight: bodyProfile?.weight ?? 75,
+                  height: bodyProfile?.height ?? 170,
+                  age: bodyProfile?.age ?? 25,
+                  sex: bodyProfile?.sex ?? 'male',
+                  activityLevel: bodyProfile?.activityLevel ?? 1,
+                  special: {
+                    pregnant: bodyProfile?.special?.pregnant ?? false,
+                    trimester: bodyProfile?.special?.trimester ?? 1,
                   },
-                  products.map(
-                    (product: ProductProps) => product.nutriments ?? {},
-                  ),
-                ).bmr.toFixed(0)
-              }
+                },
+                products.map(
+                  (product: ProductProps) => product.nutriments ?? {},
+                ),
+              ).bmr.toFixed(0)}
             </Text>
           }
         />
@@ -157,25 +159,23 @@ export default function RecommendationsList({
           text={'EER'}
           shouldPress={false}
           rightComponent={
-            <Text>
-              {
-                getDeficits(
-                  {
-                    weight: bodyProfile?.weight ?? 75,
-                    height: bodyProfile?.height ?? 170,
-                    age: bodyProfile?.age ?? 25,
-                    sex: bodyProfile?.sex ?? 'male',
-                    activityLevel: bodyProfile?.activityLevel ?? 1,
-                    special: {
-                      pregnant: bodyProfile?.special?.pregnant ?? false,
-                      trimester: bodyProfile?.special?.trimester ?? 1,
-                    },
+            <Text className='text-lg text-black dark:text-white'>
+              {getDeficits(
+                {
+                  weight: bodyProfile?.weight ?? 75,
+                  height: bodyProfile?.height ?? 170,
+                  age: bodyProfile?.age ?? 25,
+                  sex: bodyProfile?.sex ?? 'male',
+                  activityLevel: bodyProfile?.activityLevel ?? 1,
+                  special: {
+                    pregnant: bodyProfile?.special?.pregnant ?? false,
+                    trimester: bodyProfile?.special?.trimester ?? 1,
                   },
-                  products.map(
-                    (product: ProductProps) => product.nutriments ?? {},
-                  ),
-                ).eer.toFixed(0)
-              }
+                },
+                products.map(
+                  (product: ProductProps) => product.nutriments ?? {},
+                ),
+              ).eer.toFixed(0)}
             </Text>
           }
         />

@@ -37,7 +37,7 @@ export default function ListItem({
         shouldPress ? { color: 'rgba(0, 0, 0, 0.1)', borderless: false } : null
       }
       className={cn(
-        'flex-row items-center justify-between bg-white pl-4 dark:bg-neutral-700',
+        'flex-row items-center justify-between bg-white pl-4 dark:bg-background-900',
         lastItem && 'rounded-b-2xl',
         firstItem && 'rounded-t-2xl',
         backgroundColor && backgroundColor,
@@ -55,7 +55,7 @@ export default function ListItem({
         ) : (
           <Text
             className={cn(
-              'flex-1 p-0 text-base text-black dark:text-white',
+              'flex-1 p-0 text-lg text-black dark:text-white',
               textStyle,
             )}
           >
